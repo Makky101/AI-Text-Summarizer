@@ -1,0 +1,161 @@
+/* GLOBAL */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Inter, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    background: #fafafa;
+    color: #111;
+}
+
+/* THEMES */
+.dark {
+    background: #0e0e0e;
+    color: #eee;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    padding: 25px 25px;
+    align-items: center;
+}
+
+.theme-btn {
+    position: absolute;
+    right: 40px;
+    padding: 8px 8px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    background: dodgerblue;
+    transition: 0.3s transform ease-in
+}
+
+
+/* MAIN */
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px 25px;
+}
+
+.input-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: width 0.45s ease;
+}
+
+.input-box.shrink {
+    width: 45%;
+}
+
+textarea {
+    width: 100%;
+    min-height: 220px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid #8882;
+    resize: none;
+    font-size: 16px;
+    background: inherit;
+    color: inherit;
+}
+
+.light-theme::placeholder{
+    color:#eee
+}
+
+.dark-theme::placeholder{
+    color:#0e0e0e
+}
+
+/* BUTTON */
+
+.btn-layout{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.summ-btn {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: dodgerblue;
+    color: white;
+    font-size: 17px;
+    transition: 0.3s transform ease-in;
+}
+
+.clear-btn {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: red;
+    color: white;
+    font-size: 17px;
+    transition: 0.3s transform ease-in;
+}
+
+.summ-btn:hover,
+.clear-btn:hover,
+.theme-btn:hover{
+    transform: scale(1.11);
+}
+
+/* WORD COUNT */
+.word-count {
+    font-size: 14px;
+    
+}
+
+/* OUTPUT */
+.output-box {
+    width: 55%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 2s ease, transform 2s ease;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #ffffff1a;
+}
+
+.app.light .output-box {
+    background: #f5f5f5;
+}
+
+.output-box.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* TYPING EFFECT */
+.typing {
+    white-space: pre-wrap;
+    border-right: 2px solid currentColor;
+    animation: cursorBlink 0.8s infinite;
+}
+
+@keyframes cursorBlink {
+    0% {
+        border-color: transparent;
+    }
+
+    50% {
+        border-color: currentColor;
+    }
+
+    100% {
+        border-color: transparent;
+    }
+}
