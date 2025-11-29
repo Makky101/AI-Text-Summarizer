@@ -16,17 +16,19 @@ const UI2 = () => {
     async function Ask_AI(e) {
         e.preventDefault()
 
-
+        const joke = 'whoami'
         const checkWord = nameQuestions.some(s => input.toLowerCase().includes(s));
 
         if (!input.trim() || !isNaN(input)) return;
 
+        let text = input.trim()
+
         if (wordCount < 150) {
             if (checkWord) {
-                setInput('About');
+                text = joke;
             } else {
-                setDisplayedSummary("Please enter a reasonable amount of text to summarize");
-
+                setSummary("Please enter a reasonable amount of text to summarize");
+                move(true);
                 return;
             }
         }
@@ -34,7 +36,7 @@ const UI2 = () => {
         const response = await fetch('http://localhost:3000/summarize', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: input.trim() }),
+            body: JSON.stringify({ text: text}),
         })
 
         const result = await response.json()
@@ -46,9 +48,15 @@ const UI2 = () => {
         };
 
         setDisplayedSummary("");
-        move(true);
+      
 
     }
+
+    useEffect(() => {
+        if(shift){
+            setExpanded(true)
+        }
+    },[shift])
 
     const remove = () => input && setInput('')
 
@@ -57,6 +65,8 @@ const UI2 = () => {
     useEffect(() => {
         let i = 0;
         if (!summary) return;
+
+        move(true)
 
         const interval = setInterval(() => {
             setDisplayedSummary(summary.slice(0, i));
@@ -107,9 +117,9 @@ const UI2 = () => {
                     <div className={`word-count ${theme ? 'dark-theme' : 'light-theme'}`}>{wordCount} words</div>
                 </div>
 
-                {expanded && <div className={`output-box ${expanded ? "visible" : ""}`}>
+                {expanded && (<div className={`output-box ${expanded ? "visible" : ""}`}>
                     <p>{displayedSummary}</p>
-                </div>}
+                </div>)}
             </div>
         </>
     );

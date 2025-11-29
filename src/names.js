@@ -1,7 +1,7 @@
 export const nameQuestions = [
     "what is your name",
     "who are you",
-    'name?',
+    "name?",
     "what should I call you",
     "can you tell me your name",
     "your name please",
