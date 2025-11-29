@@ -8,47 +8,50 @@ const UI2 = () => {
     const [displayedSummary, setDisplayedSummary] = useState("");
     const [expanded, setExpanded] = useState(false);
     const [theme, setTheme] = useState(true);
+    const [shift, move] = useState(false)
 
-    const wordCount = input.trim() ? input.trim().split(/\s+/).length : 0;
+    const wordCount = input ? input.trim().split(/\s+/).length : 0;
 
 
     async function Ask_AI(e) {
         e.preventDefault()
-        
+
+
         const checkWord = nameQuestions.some(s => input.toLowerCase().includes(s));
 
-        if(!input.trim() || !isNaN(input)) return;
+        if (!input.trim() || !isNaN(input)) return;
 
-        if(wordCount < 150 ){
-            if (checkWord){
+        if (wordCount < 150) {
+            if (checkWord) {
                 setInput('About');
-            }else{
+            } else {
                 setDisplayedSummary("Please enter a reasonable amount of text to summarize");
-                setExpanded(true);
+
                 return;
             }
         }
 
         const response = await fetch('http://localhost:3000/summarize', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: input.trim() }),
         })
 
         const result = await response.json()
-        
-        if(result.error){
+
+        if (result.error) {
             setSummary(result.error)
-        }else{
+        } else {
             setSummary(result.summary)
         };
 
         setDisplayedSummary("");
-        setExpanded(true);
-        
+        move(true);
+
     }
 
     const remove = () => input && setInput('')
+
 
     // Typing animation for summary
     useEffect(() => {
@@ -70,10 +73,9 @@ const UI2 = () => {
     }, [theme])
 
     return (
-        <div>
+        <>
             {/* TOP BAR */}
             <header className="header">
-                <h2>Analyze your text in real time</h2>
 
                 <button
                     className="theme-btn"
@@ -83,10 +85,13 @@ const UI2 = () => {
                 </button>
             </header>
 
+            <h2 >Analyze your text in real time</h2>
+            <h3>Transform long text into concise summaries instantly with AI-powered intelligence</h3>
+
             <div className="container">
                 {/* INPUT */}
-                <div className={`input-box ${expanded ? "shrink" : ""}`}>
-                    <textarea className={`${theme ? 'dark-theme' : 'light-theme'}`}
+                <div className={`input-box ${shift ? "move" : ""} `}>
+                    <textarea className={`${theme ? 'dark-theme' : ''}`}
                         placeholder="Start typing here…"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -102,12 +107,11 @@ const UI2 = () => {
                     <div className={`word-count ${theme ? 'dark-theme' : 'light-theme'}`}>{wordCount} words</div>
                 </div>
 
-        
-                <div className={`output-box ${expanded ? "visible" : ""}`}>
-                    <p className="typing">{displayedSummary}</p>
-                </div>
+                {expanded && <div className={`output-box ${expanded ? "visible" : ""}`}>
+                    <p>{displayedSummary}</p>
+                </div>}
             </div>
-        </div>
+        </>
     );
 }
 

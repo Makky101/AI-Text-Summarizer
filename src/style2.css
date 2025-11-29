@@ -6,10 +6,31 @@
     font-family: Inter, sans-serif;
 }
 
+:root {
+    --shadow-focus-light: 0 0 0 4px rgba(0, 120, 255, 0.25);
+    --shadow-focus-dark: 0 0 0 4px rgba(100, 170, 255, 0.35);
+
+    --border-light: #d0d0d0;
+    --border-dark: #444;
+}
+
 body {
     overflow-x: hidden;
     background: #fafafa;
     color: #111;
+}
+
+h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 13px;
+}
+
+h3 {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 18px;
 }
 
 /* THEMES */
@@ -41,49 +62,69 @@ body {
 /* MAIN */
 .container {
     display: flex;
+    justify-content: center;
     gap: 20px;
     padding: 20px 25px;
 }
 
 .input-box {
-    width: 100%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    transition: width 0.45s ease;
+    transform: translateX(0);
 }
 
-.input-box.shrink {
-    width: 45%;
+.move {
+    transform: translateX(-5px);
+    transition: transform 1.45s ease;
 }
+
 
 textarea {
     width: 100%;
     min-height: 220px;
-    padding: 14px;
-    border-radius: 12px;
-    border: 2px solid #8882;
     resize: none;
     font-size: 16px;
     background: inherit;
     color: inherit;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    padding: 12px;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease
 }
 
-.light-theme::placeholder{
-    color:#eee
+textarea:focus-within {
+    box-shadow: var(--shadow-focus-light);
+    border-color: rgba(0, 120, 255);
 }
 
-.dark-theme::placeholder{
-    color:#0e0e0e
+.light-theme::placeholder {
+    color: #eee
+}
+
+.dark-theme {
+    border-color: var(--border-dark)
+}
+
+.dark-theme:focus-within {
+    box-shadow: var(--shadow-focus-dark);
+    border-color: rgba(100, 170, 255)
+}
+
+.dark-theme::placeholder {
+    color: #0e0e0e
 }
 
 /* BUTTON */
 
-.btn-layout{
+.btn-layout {
+    margin-top: 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .summ-btn {
     padding: 8px 10px;
     border-radius: 10px;
@@ -108,14 +149,14 @@ textarea {
 
 .summ-btn:hover,
 .clear-btn:hover,
-.theme-btn:hover{
+.theme-btn:hover {
     transform: scale(1.11);
 }
 
 /* WORD COUNT */
 .word-count {
     font-size: 14px;
-    
+
 }
 
 /* OUTPUT */
@@ -130,32 +171,9 @@ textarea {
     border: 1px solid #ffffff1a;
 }
 
-.app.light .output-box {
-    background: #f5f5f5;
-}
+
 
 .output-box.visible {
     opacity: 1;
     transform: translateY(0);
-}
-
-/* TYPING EFFECT */
-.typing {
-    white-space: pre-wrap;
-    border-right: 2px solid currentColor;
-    animation: cursorBlink 0.8s infinite;
-}
-
-@keyframes cursorBlink {
-    0% {
-        border-color: transparent;
-    }
-
-    50% {
-        border-color: currentColor;
-    }
-
-    100% {
-        border-color: transparent;
-    }
 }
