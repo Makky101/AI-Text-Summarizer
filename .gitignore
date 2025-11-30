@@ -22,6 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-src/Ai_logic/package.json
+
 src/AI_logic/.env
 
