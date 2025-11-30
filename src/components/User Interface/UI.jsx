@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import "./style2.css";
-import { nameQuestions } from "./names";
+import "./UI.css";
+import { nameQuestions } from "../names";
 
-const UI2 = () => {
+const UI = () => {
     const [input, setInput] = useState("");
     const [summary, setSummary] = useState("");
     const [displayedSummary, setDisplayedSummary] = useState("");
@@ -86,26 +86,36 @@ const UI2 = () => {
         <>
             {/* TOP BAR */}
             <header className="header">
+               
+                {/* Login/Sign Up Buttons */}
+                <div className="header-actions">
+                    <button className="login-btn">Login</button>
+                    {/* Theme toggle */}
+                    <button
+                        className="theme-btn"
+                        onClick={() => setTheme(theme ? false : true)}
+                    >
+                        {theme ? "🌙" : "☀️"}
+                    </button>
 
-                <button
-                    className="theme-btn"
-                    onClick={() => setTheme(theme ? false : true)}
-                >
-                    {theme ? "🌙" : "☀️"}
-                </button>
+                </div>
             </header>
 
-            <h2 >Analyze your text in real time</h2>
-            <h3>Transform long text into concise summaries instantly with AI-powered intelligence</h3>
+            {/* MAIN HEADINGS */}
+            <h2>Analyze your text in real time</h2>
+            <h3>Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered Intelligence</h3>
 
             <div className="container">
-                {/* INPUT */}
-                <div className={`input-box ${shift ? "move" : ""} `}>
-                    <textarea className={`${theme ? 'dark-theme' : ''}`}
+                {/* INPUT BOX */}
+                <div className={`input-box ${shift ? "move" : ""}`}>
+                    <textarea
+                        className={`${theme ? 'dark-theme' : ''}`}
                         placeholder="Start typing here…"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                     />
+
+                    {/* BUTTONS */}
                     <div className="btn-layout">
                         <button className="summ-btn" onClick={Ask_AI}>
                             Summarize
@@ -114,15 +124,22 @@ const UI2 = () => {
                             Clear All
                         </button>
                     </div>
-                    <div className={`word-count ${theme ? 'dark-theme' : 'light-theme'}`}>{wordCount} words</div>
+
+                    {/* WORD COUNT */}
+                    <div className={`word-count ${theme ? 'dark-theme' : 'light-theme'}`}>
+                        {wordCount} words
+                    </div>
                 </div>
 
-                {expanded && (<div className={`output-box ${expanded ? "visible" : ""}`}>
-                    <pre>{displayedSummary}</pre>
-                </div>)}
+                {/* OUTPUT BOX */}
+                {expanded && (
+                    <div className={`output-box ${expanded ? "visible" : ""}`}>
+                        <pre>{displayedSummary}</pre>
+                    </div>
+                )}
             </div>
         </>
     );
 }
 
-export default UI2;
+export default UI;

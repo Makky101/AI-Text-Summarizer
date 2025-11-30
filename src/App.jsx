@@ -1,10 +1,8 @@
-import UI2 from './UI2'
+import UI from './components/User Interface/UI'
+import Auth from './components/Authentication/auth'
 function App() {
   return (
-    //<div className='min-h-screen flex items-center justify-center bg-gray-50 p-4'>
-      <UI2/>
-    //</div>
-      
+    <UI />
   )
 }
 
