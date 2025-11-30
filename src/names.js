@@ -1,7 +1,7 @@
 export const nameQuestions = [
     "what is your name",
     "who are you",
-    "name?",
+    "name",
     "what should I call you",
     "can you tell me your name",
     "your name please",
@@ -11,9 +11,10 @@ export const nameQuestions = [
     "what do I call you",
     "who am I talking to",
     "introduce yourself",
+    "who developed you",
+    "who trained you",
     "tell me your name",
     "what's your name",
     "whats your name",
-    "what do people call you",
     "can I know your name"
 ];
