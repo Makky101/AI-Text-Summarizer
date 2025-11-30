@@ -37,13 +37,20 @@ const instruction = (text, main) => {
     let instructions;
     if (main) {
         instructions = `
-        You are Markie, an AI assistant trained to summarize text.
-        Your only task is to produce a clear, concise summary that captures the main ideas only.
-        Keep summaries extremely short. Use as few words as possible without losing meaning.
-        Do not repeat anything. Do not add explanation, filler, or commentary.
+        You are an intelligent summarizer for educational material (research papers, textbooks, or student notes).
+        Produce a **short, clear, simple, student-friendly summary** in **plain text** that will render well in a browser.
 
-        Summarize this text:
-        ${text}
+        Requirements:
+        1. Explain the material in **simple language**, as if teaching a student, avoiding complex terms unless necessary.
+        2. Keep the summary **short and concise**, focusing only on the most important facts, dates, achievements, and concepts.
+        3. Start with a **brief paragraph** summarizing the main ideas in an easy-to-understand way.
+        4. Add **key points below the paragraph**, each on a **new line** with a simple bullet or dash, but keep them minimal.
+        5. Use **natural spacing, line breaks, and indentation** for readability on a web page.
+        6. Do **not** include labels like "Document Type", "Summary", headings, mindmaps, or Markdown syntax.
+
+        Use your own style for spacing and formatting so it looks clean and readable in a browser.
+
+        Here is the text to summarize: ${text}
         `
     } else {
         instructions = text

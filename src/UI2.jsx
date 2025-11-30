@@ -23,7 +23,7 @@ const UI2 = () => {
 
         let text = input.trim()
 
-        if (wordCount < 150) {
+        if (wordCount < 20) {
             if (checkWord) {
                 text = joke;
             } else {
@@ -70,7 +70,7 @@ const UI2 = () => {
 
         const interval = setInterval(() => {
             setDisplayedSummary(summary.slice(0, i));
-            i++;
+            i ++;
             if (i > summary.length) clearInterval(interval);
         }, 18);
 
@@ -118,7 +118,7 @@ const UI2 = () => {
                 </div>
 
                 {expanded && (<div className={`output-box ${expanded ? "visible" : ""}`}>
-                    <p>{displayedSummary}</p>
+                    <pre>{displayedSummary}</pre>
                 </div>)}
             </div>
         </>

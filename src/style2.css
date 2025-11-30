@@ -12,12 +12,21 @@
 
     --border-light: #d0d0d0;
     --border-dark: #444;
+    --output-light: 0 4px 12px rgba(0, 0, 0, 1.1)
 }
 
 body {
     overflow-x: hidden;
     background: #fafafa;
     color: #111;
+    overflow: auto;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+
 }
 
 h2 {
@@ -91,7 +100,16 @@ textarea {
     border: 2px solid var(--border-light);
     border-radius: 12px;
     padding: 12px;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    outline: none;
+    overflow: auto;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+textarea::-webkit-scrollbar {
+    display: none;
+    
 }
 
 textarea:focus-within {
@@ -169,11 +187,183 @@ textarea:focus-within {
     padding: 20px;
     border-radius: 12px;
     border: 1px solid #ffffff1a;
+    box-shadow: var(--output-light)
 }
 
+.output-box pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    margin: 0;
+}
 
 
 .output-box.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Small phones / extra small screens */
+@media (max-width: 360px) {
+    .container {
+        padding: 10px;
+    }
+
+    .input-box {
+        width: 100%;
+    }
+
+    textarea {
+        min-height: 140px;
+        font-size: 14px;
+    }
+
+    .btn-layout {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .summ-btn,
+    .clear-btn {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .output-box {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    h3 {
+        font-size: 0.95rem;
+    }
+}
+
+/* Phones / small devices */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    .input-box {
+        width: 95%;
+    }
+
+    textarea {
+        min-height: 160px;
+        font-size: 15px;
+    }
+
+    .btn-layout {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .summ-btn,
+    .clear-btn {
+        width: 100%;
+        font-size: 15px;
+    }
+
+    .output-box {
+        width: 95%;
+        padding: 15px;
+        font-size: 15px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+}
+
+/*AI generated responsive screen layout system*/
+/* Tablets / medium devices */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .input-box {
+        width: 90%;
+    }
+
+    textarea {
+        min-height: 180px;
+        font-size: 16px;
+    }
+
+    .summ-btn,
+    .clear-btn {
+        flex: 1 1 120px;
+    }
+
+    .output-box {
+        width: 90%;
+        font-size: 16px;
+        padding: 18px;
+    }
+}
+
+/* Laptops / small desktops */
+@media (max-width: 1200px) {
+    .container {
+        padding: 25px;
+    }
+
+    .input-box {
+        width: 80%;
+    }
+
+    textarea {
+        min-height: 200px;
+        font-size: 16px;
+    }
+
+    .output-box {
+        width: 80%;
+        font-size: 16px;
+    }
+}
+
+/* Ultra-large screens */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .input-box,
+    .output-box {
+        max-width: 1000px;
+    }
+
+    textarea {
+        font-size: 18px;
+        min-height: 240px;
+    }
+
+    .summ-btn,
+    .clear-btn {
+        font-size: 18px;
+        padding: 10px 14px;
+    }
+
+    h2 {
+        font-size: 3.5rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
 }
