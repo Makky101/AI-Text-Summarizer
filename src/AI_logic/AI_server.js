@@ -62,7 +62,7 @@ const instruction = (text, main) => {
 app.post('/summarize', async (req, res) => {
     const text = req.body.text
     let feedBack;
-    if (text === 'About') {
+    if (text === 'whoami') {
         return (res.json({ summary: "I am Markie, an AI model trained by Makky." }))
     }
     try {
