@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./UI.css";
+import "./resp.css";
 import { nameQuestions } from "../names";
 
 const UI = () => {

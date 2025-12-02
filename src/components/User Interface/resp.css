@@ -1,0 +1,81 @@
+/*AI generated responsive screen layout system*/
+/* Tablets / medium devices */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .input-box {
+        width: 90%;
+    }
+
+    textarea {
+        min-height: 180px;
+        font-size: 16px;
+    }
+
+    .summ-btn,
+    .clear-btn {
+        flex: 1 1 120px;
+    }
+
+    .output-box {
+        width: 90%;
+        font-size: 16px;
+        padding: 18px;
+    }
+}
+
+/* Laptops / small desktops */
+@media (max-width: 1200px) {
+    .container {
+        padding: 25px;
+    }
+
+    .input-box {
+        width: 80%;
+    }
+
+    textarea {
+        min-height: 200px;
+        font-size: 16px;
+    }
+
+    .output-box {
+        width: 80%;
+        font-size: 16px;
+    }
+}
+
+/* Ultra-large screens */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .input-box,
+    .output-box {
+        max-width: 1000px;
+    }
+
+    textarea {
+        font-size: 18px;
+        min-height: 240px;
+    }
+
+    .summ-btn,
+    .clear-btn {
+        font-size: 18px;
+        padding: 10px 14px;
+    }
+
+    h2 {
+        font-size: 3.5rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+}
