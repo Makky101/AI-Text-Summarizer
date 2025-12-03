@@ -73,7 +73,9 @@ app.post('/summarize', async (req, res) => {
         console.error(err.statusCode, err.body?.message || err.message)
         const swap = [404, 429, 500].includes(err.statusCode)
         if (swap) {
-            console.log('Switching to the Machine Learning Model')
+            // If the error is due to a 404, 429, or 500 status code, switch to Distilbart
+            
+            console.log('Switching to the Distilbart model')
             try {
                 feedBack = await summarizeUsingDistilbart(text)
                 return res.json({ summary: feedBack })

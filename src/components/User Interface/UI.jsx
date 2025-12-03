@@ -92,16 +92,11 @@ const UI = () => {
                 <div className="header-actions">
                     <button className="login-btn">Login</button>
                     {/* Theme toggle */}
-                    <button
-                        className="theme-btn"
-                        onClick={() => setTheme(theme ? false : true)}
-                    >
-                        {theme ? "🌙" : "☀️"}
-                    </button>
-
+                    <i className="fa-solid theme-btn fa-circle-half-stroke"
+                        onClick={() => setTheme(theme ? false : true)}>
+                    </i>
                 </div>
             </header>
-
             {/* MAIN HEADINGS */}
             <h2>Analyze your text in real time</h2>
             <h3>Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered Intelligence</h3>
