@@ -30,8 +30,7 @@ body {
     margin-left: auto;
 }
 
-.login-btn,
-.signup-btn {
+.login-btn{
     padding: 6px 12px;
     border-radius: 8px;
     border: none;
@@ -39,11 +38,10 @@ body {
     background: dodgerblue;
     color: white;
     font-size: 14px;
-    transition: 0.3s transform ease-in;
+    transition: 0.3s transform ease-in
 }
 
-.login-btn:hover,
-.signup-btn:hover {
+.login-btn:hover {
     transform: scale(1.05);
 }
 

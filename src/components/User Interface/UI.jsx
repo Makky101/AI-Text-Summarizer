@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./UI.css";
 import "./resp.css";
 import { nameQuestions } from "../names";
+import { useNavigate } from "react-router-dom";
 
 const UI = () => {
     const [input, setInput] = useState("");
@@ -13,6 +14,7 @@ const UI = () => {
 
     const wordCount = input ? input.trim().split(/\s+/).length : 0;
 
+    let navigate = useNavigate()
 
     async function Ask_AI(e) {
         e.preventDefault()
@@ -90,7 +92,7 @@ const UI = () => {
                
                 {/* Login/Sign Up Buttons */}
                 <div className="header-actions">
-                    <button className="login-btn">Login</button>
+                    <button className="login-btn" onClick={() => navigate('/signUp')}>Login</button>
                     {/* Theme toggle */}
                     <i className="fa-solid theme-btn fa-circle-half-stroke"
                         onClick={() => setTheme(theme ? false : true)}>

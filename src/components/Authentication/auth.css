@@ -18,6 +18,7 @@
 
 .auth-box h2 {
     margin-bottom: 20px;
+    color: black
 }
 
 .auth-box form {
@@ -61,8 +62,8 @@
     align-items: center;
     justify-content: center;
     padding: 3px 15px;
-    background: #fff;
-    color: #4285f4;
+    background: #4285f4;
+    color:#fff;
     border-radius: 8px;
     border: none;
     cursor: pointer;

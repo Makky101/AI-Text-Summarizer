@@ -5,6 +5,7 @@ const Auth = () => {
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
     const [isLogin, setIsLogin] = useState(false)
+    const [newUser, setNewUser] = useState(false)
 
     function handleAuth(){
         return
@@ -16,7 +17,6 @@ const Auth = () => {
 
 
     return <div className="auth-container">
-        {/* LOGIN / SIGN UP FORM */}
         <div className="auth-box">
             <h2>{isLogin ? "Login" : "Sign Up"}</h2>
 
@@ -41,6 +41,7 @@ const Auth = () => {
 
                 {/* Submit Button */}
                 <button type="submit">{isLogin ? "Login" : "Sign Up"}</button>
+
             </form>
 
             {/* Google Auth */}
@@ -51,7 +52,6 @@ const Auth = () => {
             </div>
             
 
-            {/* Toggle between Login and Sign Up */}
             <p className="toggle-text">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
                 <span onClick={() => setIsLogin(!isLogin)}>
