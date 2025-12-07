@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "commonjs",
   "scripts": {
-    "start": "node AI_server.js",
+    "start": "node dist/AI_server.js",
     "dev": "vite",
+    "dev-server": "npx nodemon .\AI_server.ts",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -37,9 +38,9 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
-    "nodemon": "^3.1.10",
+    "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
-    "ts-node-dev": "^2.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vite": "^7.1.7"
   }
