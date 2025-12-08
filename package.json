@@ -2,11 +2,11 @@
   "name": "summarizer",
   "private": true,
   "version": "0.0.0",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "start": "node dist/AI_server.js",
     "dev": "vite",
-    "dev-server": "npx nodemon .\AI_server.ts",
+    "dev-server": "npx nodemon ./AI_server.ts",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -29,7 +29,11 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@tailwindcss/vite": "^4.1.17",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",

@@ -1,53 +1,40 @@
-require('dotenv').config();
-const {Pool} = require('pg')
-const express = require('express')
-const bcrypt = require('bcrypt')
-const cors = require('cors')
-const { CohereClientV2 } = require('cohere-ai');
-const { InferenceClient } = require('@huggingface/inference')
+import 'dotenv/config';               
+import express, { Request, Response } from 'express';
+import { Pool } from 'pg';
+import bcrypt from 'bcrypt';
+import cors from 'cors';
+import { CohereClientV2 } from 'cohere-ai';
+import { InferenceClient } from '@huggingface/inference';
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 
 const pool = new Pool({
     user: process.env.USER,
     host: process.env.HOST,
     database: process.env.DB,
     password: process.env.PASSWORD,
-    port: process.env.PORT,
+    port: Number(process.env.PORT),
 });
 
-const port = 3000
+const port: Number = 3000;
 
 const co = new CohereClientV2({ token: process.env.CO_API_KEY });
-
 const client = new InferenceClient(process.env.HF_TOKEN);
 
-async function summarizeUsingCohere(text) {
-    const response = await co.chat({
-        model: "command-a-03-2025",
-        messages: [{ role: "user", content: instruction(text, true) }]
-    });
 
-    return (response.message.content[0].text);
-};
+interface sign_up {
+    username: string;
+    password: string;
+}
 
-async function summarizeUsingDistilbart(text) {
-    const output = await client.summarization({
-        model: "sshleifer/distilbart-cnn-12-6",
-        inputs: instruction(text, false),
-        provider: "hf-inference"
-    });
-    return (output.summary_text)
-};
 
-const instruction = (text, main) => {
-    let instructions;
+const instruction = (text: string, main: boolean) => {
     if (main) {
-        instructions = `
-        You are an intelligent summarizer for educational material (research papers, textbooks, or student notes). 
+        return `
+        You are an intelligent summarizer for educational material (research papers, textbooks, or student notes).
         Produce a **short, clear, simple, student-friendly summary** in **plain text** that will render well in a browser.
 
         Requirements:
@@ -62,66 +49,73 @@ const instruction = (text, main) => {
 
         Here is the text to summarize:
         ${text}
-        `
+`;
     } else {
-        instructions = text
+        return text;
     }
-    return instructions
+};
+
+async function summarizeUsingCohere(text: string) {
+    const response: any = await co.chat({
+        model: 'command-a-03-2025',
+        messages: [{ role: 'user', content: instruction(text, true) }],
+    });
+    return response.message.content[0].text;
+}
+
+async function summarizeUsingDistilbart(text: string) {
+    const output = await client.summarization({
+        model: 'sshleifer/distilbart-cnn-12-6',
+        inputs: instruction(text, false),
+        provider: 'hf-inference',
+    });
+    return output.summary_text;
 }
 
 
-app.post('/signUp', async (req, res) => {
-    try{
-        console.log(req.body.username, '\n', req.body.password);
+app.post('/signUp', async (req: Request<{}, {}, sign_up>, res: Response) => {
+    try {
         const { username, password } = req.body;
 
-        const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS);
-        const hash = bcrypt.hashSync(password, saltRounds)
-        console.log(hash)
-        console.log(hash.length)
+        const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS!);
+        const hash = bcrypt.hashSync(password, saltRounds);
+
         const cmd = 'INSERT INTO cred (email, hashPassword) VALUES ($1, $2)';
         const values = [username, hash];
-
         await pool.query(cmd, values);
 
-        res.status(200).json({ message: "User signed up successfully" });
-
-    }catch(err){
+        res.status(200).json({ message: 'User signed up successfully' });
+    } catch (err) {
         console.error(err);
-        res.status(500).json({ Error: "An issue occured during sign up" });
+        res.status(500).json({ Error: 'An issue occurred during sign up' });
     }
 });
 
-app.post('/summarize', async (req, res) => {
-    const text = req.body.text
-    let feedBack;
+app.post('/summarize', async (req: Request, res: Response) => {
+    const text = req.body.text;
     if (text === 'whoami') {
-        return (res.json({ summary: "I am Markie, an AI model trained by Makky." }))
+        return res.json({ summary: 'I am Markie, an AI model trained by Makky.' });
     }
+
     try {
-        feedBack = await summarizeUsingCohere(text)
-        res.json({ summary: feedBack })
-    }
-    catch (err) {
-        console.error(err.statusCode, err.body?.message || err.message)
-        const swap = [404, 429, 500].includes(err.statusCode)
-        if (swap) {
-            // If the error is due to a 404, 429, or 500 status code, switch to Distilbart
-            
-            console.log('Switching to the Distilbart model')
+        const feedBack = await summarizeUsingCohere(text);
+        res.json({ summary: feedBack });
+    } catch (err: any) {
+        console.error(err.statusCode, err.body?.message || err.message);
+        if ([404, 429, 500].includes(err.statusCode)) {
+            console.log('Switching to Distilbart');
             try {
-                feedBack = await summarizeUsingDistilbart(text)
-                return res.json({ summary: feedBack })
-            } catch (fallbackErr) {
-                console.log('Both models failed!')
+                const feedBack = await summarizeUsingDistilbart(text);
+                return res.json({ summary: feedBack });
+            } catch (fallbackErr: any) {
                 console.error(fallbackErr.body?.message || fallbackErr.message);
-                return res.status(500).json({ Error: "An issue occured when summarizing text" });
+                return res.status(500).json({ Error: 'An issue occurred when summarizing text' });
             }
         }
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
-})
 
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
