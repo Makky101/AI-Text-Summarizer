@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "node dist/AI_server.js",
+    "start": "node src/AI_logic/dist/AI_server.js",
     "dev": "vite",
     "dev-server": "nodemon --watch src --ext ts --exec \"npx ts-node src/AI_logic/AI_server.ts\"",
     "vigilante": "tsc --watch",
