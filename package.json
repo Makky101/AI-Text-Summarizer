@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/AI_logic/dist/AI_server.js",
+    "c": "tsc",
     "dev": "vite",
     "dev-server": "nodemon --watch src --ext ts --exec \"npx ts-node src/AI_logic/AI_server.ts\"",
     "vigilante": "tsc --watch",
