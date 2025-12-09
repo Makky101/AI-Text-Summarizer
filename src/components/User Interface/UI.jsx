@@ -116,10 +116,10 @@ const UI = () => {
                     {/* BUTTONS */}
                     <div className="btn-layout">
                         <button className="summ-btn" onClick={Ask_AI}>
-                            Summarize
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i>
                         </button>
                         <button className="clear-btn" onClick={remove}>
-                            Clear All
+                            <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
 

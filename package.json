@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/AI_server.js",
     "dev": "vite",
-    "dev-server": "npx nodemon ./AI_server.ts",
+    "dev-server": "nodemon --watch src --ext ts --exec \"npx ts-node src/AI_logic/AI_server.ts\"",
+    "vigilante": "tsc --watch",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

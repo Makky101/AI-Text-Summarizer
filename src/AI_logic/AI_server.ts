@@ -1,5 +1,6 @@
-import 'dotenv/config';               
-import express, { Request, Response } from 'express';
+import 'dotenv/config';
+import express from 'express';
+import type { Request, Response } from 'express';
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 import cors from 'cors';
@@ -11,8 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 const pool = new Pool({
-    user: process.env.USER,
+    user: process.env.DB_USER,
     host: process.env.HOST,
     database: process.env.DB,
     password: process.env.PASSWORD,
@@ -23,13 +25,6 @@ const port: Number = 3000;
 
 const co = new CohereClientV2({ token: process.env.CO_API_KEY });
 const client = new InferenceClient(process.env.HF_TOKEN);
-
-
-interface sign_up {
-    username: string;
-    password: string;
-}
-
 
 const instruction = (text: string, main: boolean) => {
     if (main) {
@@ -72,22 +67,48 @@ async function summarizeUsingDistilbart(text: string) {
     return output.summary_text;
 }
 
+app.post('/login', async (req: Request, res:Response) => {
+  try{
+    const {username, password} = req.body
+    const cmd = 'SELECT * FROM cred WHERE username = $1';
+    const values = [username]
+    const result = await pool.query(cmd,values)
+    if(result.rows.length === 0){
+        return res.status(404).json({ error: 'username or password is incorrect' })
+    }
+    const data = result.rows[0]
+    const hash = data.hashpassword
 
-app.post('/signUp', async (req: Request<{}, {}, sign_up>, res: Response) => {
+    const validate =  bcrypt.compareSync(password, hash);
+
+    if(!validate){
+        return res.status(404).json({ error: 'username or password is incorrect' })
+    }
+
+  }catch(err:any){
+    console.error(err);
+    res.status(500).json({ error: 'An issue occurred during sign up' });
+  }
+}
+)
+
+app.post('/signUp', async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body;
-
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS!);
         const hash = bcrypt.hashSync(password, saltRounds);
-
-        const cmd = 'INSERT INTO cred (email, hashPassword) VALUES ($1, $2)';
+        const cmd = 'INSERT INTO cred (username, hashPassword) VALUES ($1, $2) ON CONFLICT(username) DO NOTHING RETURNING *;';
         const values = [username, hash];
-        await pool.query(cmd, values);
+        const result = await pool.query(cmd, values);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'username already exists' })
+        }
 
         res.status(200).json({ message: 'User signed up successfully' });
-    } catch (err) {
+    } catch (err:any) {
         console.error(err);
-        res.status(500).json({ Error: 'An issue occurred during sign up' });
+        res.status(500).json({ error: 'An issue occurred during sign up' });
     }
 });
 
@@ -109,7 +130,7 @@ app.post('/summarize', async (req: Request, res: Response) => {
                 return res.json({ summary: feedBack });
             } catch (fallbackErr: any) {
                 console.error(fallbackErr.body?.message || fallbackErr.message);
-                return res.status(500).json({ Error: 'An issue occurred when summarizing text' });
+                return res.status(500).json({ error: 'An issue occurred when summarizing text' });
             }
         }
     }

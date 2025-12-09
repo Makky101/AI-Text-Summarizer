@@ -55,6 +55,9 @@
     transform: scale(1.05);
 }
 
+.warning{
+    color: red;
+}
 
 .google-btn {
     margin-top: 6px;
