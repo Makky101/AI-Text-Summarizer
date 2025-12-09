@@ -1,43 +1,26 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import './auth.css'
+
+// Auth component handles Login and Sign Up
 const Auth = () => {
+    // State variables for form inputs and UI state
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
-    const [isLogin, setIsLogin] = useState(false)
-    const [newUser, setNewUser] = useState(true)
-    const [warning, setWarning] = useState(false)
-    const [errMsg, setErrMsg] = useState('')
-    let navigate = useNavigate()
+    const [isLogin, setIsLogin] = useState(false)   // Toggles Login / Sign Up UI
+    const [newUser, setNewUser] = useState(true)    // Determines which endpoint to call
+    const [warning, setWarning] = useState(false)   // Show warning if fields empty
+    const [errMsg, setErrMsg] = useState('')        // Store error messages from server
+    let navigate = useNavigate()                    // React Router navigation hook
 
-    async function handleAuth(){
-        if(newUser){
+    // Function to handle Login or Sign Up requests
+    async function handleAuth() {
+        if (newUser) {
+            // Sign Up flow
             try {
                 const response = await fetch('http://localhost:3000/signUp', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username.trim(),
-                        password: password.trim(),
-                    })
-                })
-                const result = await response.json()
-                if (result.error){
-                    return(result.error)
-                }
-            } catch (err) {
-                console.log(err.message)
-            }
-    
-        }else{
-            try {
-                const response = await fetch('http://localhost:3000/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         username: username.trim(),
                         password: password.trim(),
@@ -45,34 +28,60 @@ const Auth = () => {
                 })
                 const result = await response.json()
                 if (result.error) {
+                    // Return error message if sign up fails
                     return (result.error)
                 }
             } catch (err) {
-                console.log(err.message)
+                console.log(err.message) // Log network / fetch errors
+            }
+
+        } else {
+            // Login flow
+            try {
+                const response = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username.trim(),
+                        password: password.trim(),
+                    })
+                })
+                const result = await response.json()
+                if (result.error) {
+                    // Return error message if login fails
+                    return (result.error)
+                }
+            } catch (err) {
+                console.log(err.message) // Log network / fetch errors
             }
         }
-        return null
-       
+        return null // No error
     }
-    async function proceed(){
-        if (!username || !password) return setWarning(!warning);
-        const message = await handleAuth()
-        if(message) return setErrMsg(message)
 
+    // Function triggered when user clicks Login / Sign Up button
+    async function proceed() {
+        // Show warning if username or password is empty
+        if (!username || !password) return setWarning(!warning);
+
+        const message = await handleAuth()
+        if (message) return setErrMsg(message) // Show server error if exists
+
+        // Navigate to home page on successful login / signup
         navigate("/")
     }
 
-    function handleGoogleAuth(){
+    // Placeholder function for Google authentication
+    function handleGoogleAuth() {
         return
     }
 
-
     return <div className="auth-container">
         <div className="auth-box">
+            {/* Title changes based on login/signup mode */}
             <h2>{isLogin ? "Login" : "Sign Up"}</h2>
 
-            <form onSubmit={(e) => {e.preventDefault()}}>
-                {/* Username */}
+            <form onSubmit={(e) => { e.preventDefault() }}>
+                {/* Username input */}
                 <input
                     type="text"
                     placeholder="Username"
@@ -81,7 +90,7 @@ const Auth = () => {
                     required
                 />
 
-                {/* Password */}
+                {/* Password input */}
                 <input
                     type="password"
                     placeholder="Password"
@@ -89,34 +98,40 @@ const Auth = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                {warning && (<div>
-                    <p className='warning'>please enter username and password</p>
-                </div>)}
-                
-                {errMsg && (<div>
-                    <p className='warning'>{errMsg}</p>
-                </div>)
-                }
-        
-                {/* Submit Button */}
+
+                {/* Warning for empty fields */}
+                {warning && (
+                    <div>
+                        <p className='warning'>please enter username and password</p>
+                    </div>
+                )}
+
+                {/* Server error message */}
+                {errMsg && (
+                    <div>
+                        <p className='warning'>{errMsg}</p>
+                    </div>
+                )}
+
+                {/* Submit button */}
                 <button className='signup' onClick={proceed} type="submit">
                     {isLogin ? "Login" : "Sign Up"}
                 </button>
 
             </form>
 
-            {/* Google Auth */}
-            <div className="google-btn" >
+            {/* Google Authentication button */}
+            <div className="google-btn">
                 <button onClick={handleGoogleAuth}>
                     Continue with Google
                 </button>
             </div>
-            
 
+            {/* Toggle between Login and Sign Up */}
             <p className="toggle-text">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
                 <span onClick={() => {
-                    setIsLogin(!isLogin),
+                    setIsLogin(!isLogin)
                     setNewUser(!newUser)
                 }}>
                     {isLogin ? "Sign Up" : "Login"}
@@ -125,4 +140,5 @@ const Auth = () => {
         </div>
     </div>
 }
+
 export default Auth
