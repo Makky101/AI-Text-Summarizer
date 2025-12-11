@@ -6,12 +6,14 @@ import { useNavigate } from "react-router-dom";
 
 // Main UI component for text summarization
 const UI = () => {
+    //get the boolean value of the background color
+    const backgroundColour = localStorage.getItem("color") || 'light'
     // State variables
     const [input, setInput] = useState("");                  // Stores user input
     const [summary, setSummary] = useState("");             // Full summary returned by AI
     const [displayedSummary, setDisplayedSummary] = useState(""); // For typing animation
     const [expanded, setExpanded] = useState(false);        // Controls output box visibility
-    const [theme, setTheme] = useState(true);              // Light/dark theme toggle
+    const [theme, setTheme] = useState(backgroundColour);              // Light/dark theme toggle
     const [shift, move] = useState(false);                 // Controls input box animation
 
     // Count words in the input
@@ -36,8 +38,8 @@ const UI = () => {
             if (checkWord) {
                 text = joke; // Send special "whoami" command
             } else {
-                setSummary("Please enter a reasonable amount of text to summarize");
                 move(true); // Trigger animation for small input
+                setSummary("Please enter a reasonable amount of text to summarize");
                 return;
             }
         }
@@ -88,7 +90,11 @@ const UI = () => {
 
     // Toggle dark/light mode by modifying body class
     useEffect(() => {
-        document.body.classList.toggle("dark")
+        if(theme === 'dark'){
+            document.body.classList.add("dark")
+        }else if(theme === 'light' && document.body.classList.contains('dark')){
+            document.body.classList.remove("dark")
+        }
     }, [theme])
 
     return (
@@ -97,10 +103,15 @@ const UI = () => {
             <header className="header">
                 {/* Login/Sign Up Buttons */}
                 <div className="header-actions">
-                    <button className="login-btn" onClick={() => navigate('/signUp')}>Login</button>
+                    <button className="login-btn" onClick={() => navigate('/')}>Login</button>
                     {/* Theme toggle button */}
                     <i className="fa-solid theme-btn fa-circle-half-stroke"
-                        onClick={() => setTheme(theme ? false : true)}>
+                        onClick={() => {
+                            //store the color of the background so upon refreshing it loads the background it was previously in.
+                            let color = theme === 'light' ? 'dark' : 'light'
+                            localStorage.setItem('color',color)
+                            setTheme(theme === 'light' ? 'dark' : 'light')
+                        }}>
                     </i>
                 </div>
             </header>
@@ -113,29 +124,11 @@ const UI = () => {
                 {/* INPUT BOX */}
                 <div className={`input-box ${shift ? "move" : ""}`}>
                     <textarea
-                        className={`${theme ? 'dark-theme' : ''}`} // Apply dark theme if enabled
+                        className={`${theme === 'dark' ? 'light-theme' : 'dark-theme'}`} // Apply dark theme if enabled
                         placeholder="Start typing here…"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                    />
-
-                    {/* BUTTONS */}
-                    <div className="btn-layout">
-                        {/* Submit button for AI summarization */}
-                        <button className="summ-btn" onClick={Ask_AI}>
-                            <i className="fa-solid fa-arrow-right-to-bracket"></i>
-                        </button>
-
-                        {/* Clear input button */}
-                        <button className="clear-btn" onClick={remove}>
-                            <i className="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-
-                    {/* WORD COUNT DISPLAY */}
-                    <div className={`word-count ${theme ? 'dark-theme' : 'light-theme'}`}>
-                        {wordCount} words
-                    </div>
+                    />        
                 </div>
 
                 {/* OUTPUT BOX */}
@@ -144,6 +137,24 @@ const UI = () => {
                         <pre>{displayedSummary}</pre> {/* Typing animation summary */}
                     </div>
                 )}
+            </div>
+
+            {/* WORD COUNT DISPLAY */}
+            <div className={`word-count ${shift ? "move-word" : ""}`}>
+                {wordCount} words
+            </div>
+            
+            {/* BUTTONS */}
+            <div className="btn-layout">
+                {/* Submit button for AI summarization */}
+                <button className="summ-btn" onClick={Ask_AI}>
+                    <i className="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+
+                {/* Clear input button */}
+                <button className="clear-btn" onClick={remove}>
+                    <i className="fa-solid fa-trash"></i>
+                </button>
             </div>
         </>
     );

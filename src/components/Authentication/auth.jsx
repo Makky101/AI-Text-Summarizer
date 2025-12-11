@@ -11,6 +11,7 @@ const Auth = () => {
     const [newUser, setNewUser] = useState(true)    // Determines which endpoint to call
     const [warning, setWarning] = useState(false)   // Show warning if fields empty
     const [errMsg, setErrMsg] = useState('')        // Store error messages from server
+    const [register, setRegister] = useState(false)
     let navigate = useNavigate()                    // React Router navigation hook
 
     // Function to handle Login or Sign Up requests
@@ -67,7 +68,10 @@ const Auth = () => {
         if (message) return setErrMsg(message) // Show server error if exists
 
         // Navigate to home page on successful login / signup
-        navigate("/")
+        navigate("/home")
+
+        //account registered
+
     }
 
     // Placeholder function for Google authentication

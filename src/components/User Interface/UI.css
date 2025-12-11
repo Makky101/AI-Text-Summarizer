@@ -24,6 +24,10 @@ body {
     scroll-behavior: smooth;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
 .header-actions{
     display: flex;
     gap:10px;
@@ -88,6 +92,8 @@ h3 {
 
 /* MAIN */
 .container {
+    height: auto;
+    min-height: 60vh;
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -96,6 +102,7 @@ h3 {
 
 .input-box {
     width: 70%;
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -107,10 +114,14 @@ h3 {
     width: 45%;
 }
 
+.move-word{
+    transform: translateX(-12rem);
+}
+
 
 textarea {
     width: 100%;
-    min-height: 220px;
+    height: 100%;
     resize: none;
     font-size: 16px;
     background: inherit;
@@ -135,6 +146,41 @@ textarea:focus-within {
     border-color: rgba(0, 120, 255);
 }
 
+/* OUTPUT */
+.output-box {
+    width: 55%;
+    min-height: 300px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 2s ease, transform 2s ease;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--output-light);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.output-box::-webkit-scrollbar {
+    display: none;
+}
+
+.output-box pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    margin: 0;
+}
+
+
+.output-box.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
 .light-theme::placeholder {
     color: #eee
 }
@@ -153,12 +199,11 @@ textarea:focus-within {
 }
 
 /* BUTTON */
-
 .btn-layout {
-    margin-top: 20px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 600px;
+    margin-top: 5px;
 }
 
 .summ-btn {
@@ -192,40 +237,33 @@ textarea:focus-within {
 /* WORD COUNT */
 .word-count {
     font-size: 14px;
-
+    margin-left: 13rem;
 }
 
-/* OUTPUT */
-.output-box {
-    width: 55%;
-    height: 300px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 2s ease, transform 2s ease;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: var(--output-light);
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: none;
+/*AI generated responsive screen layout system*/
+/* Tablets / medium devices */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .input-box {
+        width: 90%;
+    }
+
+    textarea {
+        min-height: 180px;
+        font-size: 16px;
+    }
+
+    .summ-btn,
+    .clear-btn {
+        flex: 1 1 120px;
+    }
+
+    .output-box {
+        width: 90%;
+        font-size: 16px;
+        padding: 18px;
+    }
 }
-
-.output-box::-webkit-scrollbar {
-    display: none;
-}
-
-.output-box pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    margin: 0;
-}
-
-
-.output-box.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-

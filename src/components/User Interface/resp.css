@@ -1,81 +1,61 @@
-/*AI generated responsive screen layout system*/
-/* Tablets / medium devices */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px;
-    }
-
-    .input-box {
-        width: 90%;
-    }
-
-    textarea {
-        min-height: 180px;
-        font-size: 16px;
-    }
-
-    .summ-btn,
-    .clear-btn {
-        flex: 1 1 120px;
-    }
-
-    .output-box {
-        width: 90%;
-        font-size: 16px;
-        padding: 18px;
-    }
-}
-
-/* Laptops / small desktops */
+/* Laptops / Small Desktops */
 @media (max-width: 1200px) {
     .container {
-        padding: 25px;
-    }
-
-    .input-box {
-        width: 80%;
-    }
-
-    textarea {
-        min-height: 200px;
-        font-size: 16px;
-    }
-
-    .output-box {
-        width: 80%;
-        font-size: 16px;
-    }
-}
-
-/* Ultra-large screens */
-@media (min-width: 1920px) {
-    .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 30px;
+        padding: 20px;
+        min-height: 60vh;
+        /* keep layout comfortable */
     }
 
     .input-box,
     .output-box {
-        max-width: 1000px;
+        width: 90%;
+        /* better for medium screens */
+        min-height: 260px;
+        /* consistent size */
     }
 
     textarea {
-        font-size: 18px;
-        min-height: 240px;
+        min-height: 220px;
+        font-size: 16px;
+    }
+
+    .word-count {
+        width: 90%;
+        font-size: 14px;
+    }
+}
+
+/* Ultra-Large Screens */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 40px;
+    }
+
+    .input-box,
+    .output-box {
+        max-width: 1100px;
+        min-height: 350px;
+        /* bigger UI for large monitors */
+    }
+
+    textarea {
+        font-size: 20px;
+        min-height: 320px;
     }
 
     .summ-btn,
     .clear-btn {
-        font-size: 18px;
-        padding: 10px 14px;
+        font-size: 20px;
+        padding: 12px 18px;
     }
 
     h2 {
-        font-size: 3.5rem;
+        font-size: 3.8rem;
     }
 
     h3 {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
     }
 }
