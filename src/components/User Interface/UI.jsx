@@ -15,7 +15,7 @@ const UI = () => {
     const [expanded, setExpanded] = useState(false);        // Controls output box visibility
     const [theme, setTheme] = useState(backgroundColour);              // Light/dark theme toggle
     const [shift, move] = useState(false);                 // Controls input box animation
-
+    const [loading,isLoading] = useState(false)
     // Count words in the input
     const wordCount = input ? input.trim().split(/\s+/).length : 0;
 
@@ -54,8 +54,10 @@ const UI = () => {
         const result = await response.json()
 
         if (result.error) {
+            isLoading(!loading)
             setSummary(result.error) // Display error if backend fails
         } else {
+            isLoading(!loading)
             setSummary(result.summary) // Display returned summary
         };
 
@@ -99,7 +101,7 @@ const UI = () => {
 
     return (
         <div className={`min-h-screen w-full transition-colors duration-300 overflow-x-hidden ${theme === 'dark' ? 'dark bg-black text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-            <header className="w-full sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-20">
+            <header className="w-full fixed top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-20 h-20">
                 <div className="max-w-5xl mx-auto flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-3">
                         <span className="text-xl font-bold tracking-tight">Summarizer</span>
@@ -125,7 +127,7 @@ const UI = () => {
                 </div>
             </header>
             {/* MAIN HEADINGS */}
-            <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 mt-6">
+            <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 mt-20">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-2">Analyze your text in real time</h2>
                 <h3 className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-6">Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered intelligence</h3>
             </div>
@@ -146,11 +148,16 @@ const UI = () => {
 
                 {/* OUTPUT BOX */}
                 {expanded && (
-                    <div className={`min-h-[200px] sm:min-h-[300px] bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
-                        ${expanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}
-                    `}>
-                        <pre className="whitespace-pre-wrap break-words font-sans text-sm sm:text-base text-gray-800 dark:text-gray-200 leading-relaxed">{displayedSummary}</pre> {/* Typing animation summary */}
+                    loading ?
+                    <div className="flex items-center justify-center h-screen">
+                        <div className="w-16 h-16 border-4 border-blue-500 rounded-full animate-spin-pulse"></div>                
                     </div>
+                    :
+                    <div className={`min-h-[200px] sm:min-h-[300px] bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
+                        ${expanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`
+                    }>
+                        <pre className="whitespace-pre-wrap break-words font-sans text-sm sm:text-base text-gray-800 dark:text-gray-200 leading-relaxed">{displayedSummary}</pre> {/* Typing animation summary */}
+                    </div> 
                 )}
             </div>
 

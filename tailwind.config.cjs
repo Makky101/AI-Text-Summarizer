@@ -7,6 +7,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      animation:{
+        'spin-pulse': 'spinPulse 1s ease-in-out infinite',
+      },
+      keyframes:{
+        spinPulse: {
+          '0%, 100%': { transform: 'scale(1)'},
+          '50%': {transform: 'scale(1.2)'}
+        }
+      },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
       },
