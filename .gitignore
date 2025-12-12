@@ -23,4 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 .env
-fcc_MAGIC_example.ipynb
+fcc_MAGIC_example
