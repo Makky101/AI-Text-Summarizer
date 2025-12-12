@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --shadow-focus-light: 0 0 0 4px rgba(37, 99, 235, 0.25); /* blue-600 */
+  --shadow-focus-dark: 0 0 0 4px rgba(37, 99, 235, 0.35);
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fafafa;
+  color: #111;
+  overflow-x: hidden;
+}
+
+.dark body {
+  background-color: #000000;
+  color: #f3f4f6;
+}
+
+/* sub color tokens for elements so the contrast looks right */
+.card {
+  background: white;
+  border-color: #e6e6e6;
+  color: #111;
+}
+
+.dark .card {
+  background: #0b1220; /* a little lighter than pure black */
+  border-color: #263241;
+  color: #e6eef8;
+}
+
+h2{ @apply text-center text-4xl font-semibold mb-3; }
+
+h3{ @apply text-center text-lg text-gray-600 dark:text-gray-200 mb-6; }
+
+@layer utilities {
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}

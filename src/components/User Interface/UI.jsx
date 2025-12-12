@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import "./UI.css";
-import "./resp.css";
+// import "./UI.css";
+// import "./resp.css";
 import { nameQuestions } from "../names";  // List of keywords for special inputs
 import { useNavigate } from "react-router-dom";
 
@@ -92,71 +92,88 @@ const UI = () => {
     useEffect(() => {
         if(theme === 'dark'){
             document.body.classList.add("dark")
-        }else if(theme === 'light' && document.body.classList.contains('dark')){
+        }else if(theme === 'light'){
             document.body.classList.remove("dark")
         }
     }, [theme])
 
     return (
-        <>
-            {/* TOP BAR */}
-            <header className="header">
-                {/* Login/Sign Up Buttons */}
-                <div className="header-actions">
-                    <button className="login-btn" onClick={() => navigate('/')}>Login</button>
-                    {/* Theme toggle button */}
-                    <i className="fa-solid theme-btn fa-circle-half-stroke"
-                        onClick={() => {
-                            //store the color of the background so upon refreshing it loads the background it was previously in.
+        <div className={`min-h-screen w-full transition-colors duration-300 overflow-x-hidden ${theme === 'dark' ? 'dark bg-black text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+            <header className="w-full sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-20">
+                <div className="max-w-5xl mx-auto flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center gap-3">
+                        <span className="text-xl font-bold tracking-tight">Summarizer</span>
+                        <span className="hidden sm:inline text-sm text-gray-500 dark:text-gray-400 font-medium">AI summaries, simplified</span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <button 
+                            className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            onClick={() => navigate('/')}
+                        >
+                            Login
+                        </button>
+
+                        <button aria-label="Toggle theme" className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => {
                             let color = theme === 'light' ? 'dark' : 'light'
                             localStorage.setItem('color',color)
                             setTheme(theme === 'light' ? 'dark' : 'light')
                         }}>
-                    </i>
+                            <i className={`fa-solid ${theme === 'light' ? 'fa-moon' : 'fa-sun'}`}></i>
+                        </button>
+                    </div>
                 </div>
             </header>
-
             {/* MAIN HEADINGS */}
-            <h2>Analyze your text in real time</h2>
-            <h3>Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered Intelligence</h3>
+            <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 mt-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-2">Analyze your text in real time</h2>
+                <h3 className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-6">Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered intelligence</h3>
+            </div>
 
-            <div className="container">
+            <div className="flex flex-col lg:flex-row justify-center gap-6 p-4 sm:p-6 min-h-[60vh] h-auto max-w-5xl mx-auto">
                 {/* INPUT BOX */}
-                <div className={`input-box ${shift ? "move" : ""}`}>
+                <div className={`flex flex-col gap-3 transition-all duration-500 ease-out min-h-[250px] sm:min-h-[300px] 
+                    ${shift ? "lg:w-5/12 lg:-translate-x-2.5 w-full" : "w-full lg:w-7/12"}
+                `}>
                     <textarea
-                        className={`${theme === 'dark' ? 'light-theme' : 'dark-theme'}`} // Apply dark theme if enabled
+                        className={`w-full h-full resize-none text-base bg-white dark:bg-[#111] text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-800 rounded-xl p-4 transition-all duration-250 ease-out outline-none overflow-auto placeholder-gray-400 dark:placeholder-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent shadow-sm dark:shadow-none`}
                         placeholder="Start typing here…"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
+                        aria-label="Text input for summarization"
                     />        
                 </div>
 
                 {/* OUTPUT BOX */}
                 {expanded && (
-                    <div className={`output-box ${expanded ? "visible" : ""}`}>
-                        <pre>{displayedSummary}</pre> {/* Typing animation summary */}
+                    <div className={`min-h-[200px] sm:min-h-[300px] bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
+                        ${expanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}
+                    `}>
+                        <pre className="whitespace-pre-wrap break-words font-sans text-sm sm:text-base text-gray-800 dark:text-gray-200 leading-relaxed">{displayedSummary}</pre> {/* Typing animation summary */}
                     </div>
                 )}
             </div>
 
             {/* WORD COUNT DISPLAY */}
-            <div className={`word-count ${shift ? "move-word" : ""}`}>
-                {wordCount} words
+            <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-3 text-center">
+                <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{wordCount} words</span>
             </div>
             
             {/* BUTTONS */}
-            <div className="btn-layout">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-4 w-full pb-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Submit button for AI summarization */}
-                <button className="summ-btn" onClick={Ask_AI}>
-                    <i className="fa-solid fa-arrow-right-to-bracket"></i>
+                <button aria-label="Summarize" className="px-4 py-2 rounded-xl border-none cursor-pointer bg-blue-600 dark:bg-blue-600 hover:bg-blue-500 text-white text-lg w-full sm:w-auto transition-transform duration-300 hover:scale-110 flex items-center justify-center gap-2 shadow-sm" onClick={Ask_AI}>
+                    <i className="fa-solid fa-arrow-right-to-bracket" />
+                    <span className="hidden sm:inline">Summarize</span>
                 </button>
 
                 {/* Clear input button */}
-                <button className="clear-btn" onClick={remove}>
-                    <i className="fa-solid fa-trash"></i>
+                <button aria-label="Clear" className="px-4 py-2 rounded-xl border-none cursor-pointer bg-red-600 dark:bg-red-600 hover:bg-red-500 text-white text-lg w-full sm:w-auto transition-transform duration-300 hover:scale-110 flex items-center justify-center gap-2 shadow-sm" onClick={remove}>
+                    <i className="fa-solid fa-trash" />
+                    <span className="hidden sm:inline">Clear</span>
                 </button>
             </div>
-        </>
+        </div>
     );
 }
 
