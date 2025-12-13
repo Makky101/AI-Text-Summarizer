@@ -4,20 +4,13 @@ import "./UI.css";
 import { nameQuestions } from "../names";  // List of keywords for special inputs
 import { useNavigate } from "react-router-dom";
 
-//get the boolean value of the background color
-const backgroundColour = localStorage.getItem("color") || 'light'
-
-//pass the theme var into another var to be exported
-export let authTheme = backgroundColour
-
 // Main UI component for text summarization
-const UI = () => {
+const Main_Page = ({theme, setTheme}) => {
     // State variables
     const [input, setInput] = useState("");                  // Stores user input
     const [summary, setSummary] = useState("");             // Full summary returned by AI
     const [displayedSummary, setDisplayedSummary] = useState(""); // For typing animation
     const [expanded, setExpanded] = useState(false);        // Controls output box visibility
-    const [theme, setTheme] = useState(backgroundColour);              // Light/dark theme toggle
     const [shift, move] = useState(false);                 // Controls input box animation
     const [loading,isLoading] = useState(false)
     // Count words in the input
@@ -189,4 +182,4 @@ const UI = () => {
     );
 }
 
-export default UI;
+export default Main_Page;

@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { authTheme } from '../User Interface/UI';
 // import './auth.css'
 
 // Auth component handles Login and Sign Up
-const Auth = () => {
+const Auth = ({authTheme}) => {
     // State variables for form inputs and UI state
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
