@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { authTheme } from '../User Interface/UI';
 // import './auth.css'
 
 // Auth component handles Login and Sign Up
@@ -15,6 +14,9 @@ const Auth = () => {
     const [errMsg, setErrMsg] = useState('')        // Store error messages from server
     const [register, setRegister] = useState(false)
     let navigate = useNavigate()                    // React Router navigation hook
+    
+    // Get theme from local storage
+    const [theme, setTheme] = useState(localStorage.getItem("color") || 'light');
 
     // Function to handle Login or Sign Up requests
     async function handleAuth() {
@@ -83,15 +85,14 @@ const Auth = () => {
 
     // Toggle dark/light mode by modifying body for the authentication side
     useEffect(() => {
-        let exists = document.body.classList.contains('dark')
-        if(authTheme === 'dark'){
+        if(theme === 'dark'){
             document.body.classList.add("dark")
-        }else if(exists){
+        }else {
             document.body.classList.remove("dark")
         }
-    }, [authTheme])
+    }, [theme])
 
-    return<div className={`flex justify-center items-center min-h-screen p-6 ${authTheme === 'dark' ? 'dark bg-black text-gray-100' : 'bg-gray-50 text-gray-900'} bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300`}>
+    return<div className={`flex justify-center items-center min-h-screen p-6 ${theme === 'dark' ? 'dark bg-black text-gray-100' : 'bg-gray-50 text-gray-900'} bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300`}>
         <div className="w-full max-w-[400px] bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-6 sm:p-8 rounded-xl shadow-lg dark:shadow-none text-center transition-colors duration-300">
             {/* Title changes based on login/signup mode */}
             <h2 className="mb-6 text-2xl font-bold tracking-tight">{isLogin ? "Login" : "Sign Up"}</h2>
