@@ -4,6 +4,9 @@ import "./UI.css";
 import { nameQuestions } from "../names";  // List of keywords for special inputs
 import { useNavigate } from "react-router-dom";
 
+//REMEBER TO SET THE PROFILE TO THE FIRST LETTER OF THE PERSON'S NAME
+//IMPORT IT INTO THE USERS INTERFACE
+
 // Main UI component for text summarization
 const Main_Page = ({theme, setTheme}) => {
     // State variables
