@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
-// import "./UI.css";
+import "./UI.css";
 // import "./resp.css";
 import { nameQuestions } from "../names";  // List of keywords for special inputs
 import { useNavigate } from "react-router-dom";
 
+//get the boolean value of the background color
+const backgroundColour = localStorage.getItem("color") || 'light'
+
+//pass the theme var into another var to be exported
+export let authTheme = backgroundColour
+
 // Main UI component for text summarization
 const UI = () => {
-    //get the boolean value of the background color
-    const backgroundColour = localStorage.getItem("color") || 'light'
     // State variables
     const [input, setInput] = useState("");                  // Stores user input
     const [summary, setSummary] = useState("");             // Full summary returned by AI
@@ -44,6 +48,9 @@ const UI = () => {
             }
         }
 
+        move(true) // Trigger shift animation
+        isLoading(true) //Loading animation
+
         // Send POST request to backend summarization endpoint
         const response = await fetch('http://localhost:3000/summarize', {
             method: 'POST',
@@ -53,11 +60,11 @@ const UI = () => {
 
         const result = await response.json()
 
+        isLoading(false) //Loading animation
+
         if (result.error) {
-            isLoading(!loading)
             setSummary(result.error) // Display error if backend fails
         } else {
-            isLoading(!loading)
             setSummary(result.summary) // Display returned summary
         };
 
@@ -79,8 +86,6 @@ const UI = () => {
         let i = 0;
         if (!summary) return;
 
-        move(true) // Trigger shift animation
-
         const interval = setInterval(() => {
             setDisplayedSummary(summary.slice(0, i)); // Add one character at a time
             i++;
@@ -92,16 +97,13 @@ const UI = () => {
 
     // Toggle dark/light mode by modifying body class
     useEffect(() => {
-        if(theme === 'dark'){
-            document.body.classList.add("dark")
-        }else if(theme === 'light'){
+        if(theme === 'light'){
             document.body.classList.remove("dark")
         }
     }, [theme])
-
     return (
         <div className={`min-h-screen w-full transition-colors duration-300 overflow-x-hidden ${theme === 'dark' ? 'dark bg-black text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-            <header className="w-full fixed top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-20 h-20">
+            <header className="w-full fixed top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-20 h-17">
                 <div className="max-w-5xl mx-auto flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-3">
                         <span className="text-xl font-bold tracking-tight">Summarizer</span>
@@ -128,8 +130,8 @@ const UI = () => {
             </header>
             {/* MAIN HEADINGS */}
             <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 mt-20">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-2">Analyze your text in real time</h2>
-                <h3 className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-6">Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered intelligence</h3>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-3">Analyze your text in real time</h2>
+                <h3 className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3">Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered intelligence</h3>
             </div>
 
             <div className="flex flex-col lg:flex-row justify-center gap-6 p-4 sm:p-6 min-h-[60vh] h-auto max-w-5xl mx-auto">
@@ -148,15 +150,18 @@ const UI = () => {
 
                 {/* OUTPUT BOX */}
                 {expanded && (
-                    loading ?
-                    <div className="flex items-center justify-center h-screen">
-                        <div className="w-16 h-16 border-4 border-blue-500 rounded-full animate-spin-pulse"></div>                
-                    </div>
-                    :
-                    <div className={`min-h-[200px] sm:min-h-[300px] bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
+                    <div className={`min-h-[200px] max-h-[350px] sm:min-h-[300px] bg-white dark:bg-[#111] border output-box border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
                         ${expanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`
                     }>
-                        <pre className="whitespace-pre-wrap break-words font-sans text-sm sm:text-base text-gray-800 dark:text-gray-200 leading-relaxed">{displayedSummary}</pre> {/* Typing animation summary */}
+                        {loading ? 
+                        <div className="flex items-center justify-center h-full">
+                            <div className="w-16 h-16 border-4 border-blue-500 rounded-full animate-spin-pulse"></div>                
+                        </div>
+                        : 
+                        <pre className="whitespace-pre-wrap break-words font-sans text-sm sm:text-base text-gray-800 dark:text-gray-200 leading-relaxed">{displayedSummary}</pre>
+                        } 
+                        
+                        {/* Typing animation summary */}
                     </div> 
                 )}
             </div>
@@ -167,11 +172,11 @@ const UI = () => {
             </div>
             
             {/* BUTTONS */}
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-4 w-full pb-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-80 mt-4 w-full pb-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Submit button for AI summarization */}
-                <button aria-label="Summarize" className="px-4 py-2 rounded-xl border-none cursor-pointer bg-blue-600 dark:bg-blue-600 hover:bg-blue-500 text-white text-lg w-full sm:w-auto transition-transform duration-300 hover:scale-110 flex items-center justify-center gap-2 shadow-sm" onClick={Ask_AI}>
+                <button aria-label="Enter" className="px-4 py-2 rounded-xl border-none cursor-pointer bg-blue-600 dark:bg-blue-600 hover:bg-blue-500 text-white text-lg w-full sm:w-auto transition-transform duration-300 hover:scale-110 flex items-center justify-center gap-2 shadow-sm" onClick={Ask_AI}>
                     <i className="fa-solid fa-arrow-right-to-bracket" />
-                    <span className="hidden sm:inline">Summarize</span>
+                    <span className="hidden sm:inline">Enter</span>
                 </button>
 
                 {/* Clear input button */}

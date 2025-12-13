@@ -1,4 +1,5 @@
 /* GLOBAL */
+/*
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,20 +14,13 @@
     --border-light: #e0e0e0;
     --border-dark: #444;
     --output-light: 0 4px 12px rgba(0, 0, 0, 1.1)
-}
+}*/
 
-body {
-    overflow-x: hidden;
-    background: #fafafa;
-    color: #111;
-    overflow: auto;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-}
 
 body::-webkit-scrollbar {
     display: none;
 }
+/*
 
 .header-actions{
     display: flex;
@@ -69,12 +63,16 @@ h3 {
 }
 
 /* THEMES */
+
+/*
 .dark {
     background: #0e0e0e;
     color: #eee;
 }
 
 /* HEADER */
+
+/*
 .header {
     display: flex;
     padding: 25px 25px;
@@ -91,6 +89,8 @@ h3 {
 
 
 /* MAIN */
+
+/*
 .container {
     height: auto;
     min-height: 60vh;
@@ -134,38 +134,32 @@ textarea {
     overflow: auto;
     scrollbar-width: none;
     scroll-behavior: smooth;
-}
+}*/
 
 textarea::-webkit-scrollbar {
     display: none;
     
 }
-
+/*
 textarea:focus-within {
     box-shadow: var(--shadow-focus-light);
     border-color: rgba(0, 120, 255);
 }
 
 /* OUTPUT */
+
+/*
 .output-box {
-    width: 55%;
-    min-height: 300px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 2s ease, transform 2s ease;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: var(--output-light);
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: none;
 }
+*/
 
 .output-box::-webkit-scrollbar {
     display: none;
 }
 
+/*
 .output-box pre {
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -199,6 +193,8 @@ textarea:focus-within {
 }
 
 /* BUTTON */
+
+/*
 .btn-layout {
     display: flex;
     justify-content: center;
@@ -235,35 +231,9 @@ textarea:focus-within {
 }
 
 /* WORD COUNT */
+/*
 .word-count {
     font-size: 14px;
     margin-left: 13rem;
 }
-
-/*AI generated responsive screen layout system*/
-/* Tablets / medium devices */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px;
-    }
-
-    .input-box {
-        width: 90%;
-    }
-
-    textarea {
-        min-height: 180px;
-        font-size: 16px;
-    }
-
-    .summ-btn,
-    .clear-btn {
-        flex: 1 1 120px;
-    }
-
-    .output-box {
-        width: 90%;
-        font-size: 16px;
-        padding: 18px;
-    }
-}
+*/

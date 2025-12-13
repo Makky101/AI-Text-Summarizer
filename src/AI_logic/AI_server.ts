@@ -141,7 +141,6 @@ app.post('/signUp', async (req: Request, res: Response) => {
 // Summarize endpoint
 app.post('/summarize', async (req: Request, res: Response) => {
     const text = req.body.text;
-
     // This is a joke 😏
     if (text === 'whoami') {
         return res.json({ summary: 'I am Markie, an AI model trained by Makky.' });

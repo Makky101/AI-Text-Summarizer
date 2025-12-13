@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import { authTheme } from '../User Interface/UI';
 // import './auth.css'
 
 // Auth component handles Login and Sign Up
@@ -61,8 +63,8 @@ const Auth = () => {
 
     // Function triggered when user clicks Login / Sign Up button
     async function proceed() {
-        // Show warning if username or password is empty
-        if (!username || !password) return setWarning(!warning);
+        // Show warning if username or password is empty or username is completely a number
+        if (!username || !password || !isNaN(username)) return setWarning(!warning);
 
         const message = await handleAuth()
         if (message) return setErrMsg(message) // Show server error if exists
@@ -79,7 +81,17 @@ const Auth = () => {
         return
     }
 
-    return <div className="flex justify-center items-center min-h-screen p-6 bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    // Toggle dark/light mode by modifying body for the authentication side
+    useEffect(() => {
+        let exists = document.body.classList.contains('dark')
+        if(authTheme === 'dark'){
+            document.body.classList.add("dark")
+        }else if(exists){
+            document.body.classList.remove("dark")
+        }
+    }, [authTheme])
+
+    return<div className={`flex justify-center items-center min-h-screen p-6 ${authTheme === 'dark' ? 'dark bg-black text-gray-100' : 'bg-gray-50 text-gray-900'} bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300`}>
         <div className="w-full max-w-[400px] bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-6 sm:p-8 rounded-xl shadow-lg dark:shadow-none text-center transition-colors duration-300">
             {/* Title changes based on login/signup mode */}
             <h2 className="mb-6 text-2xl font-bold tracking-tight">{isLogin ? "Login" : "Sign Up"}</h2>
@@ -108,7 +120,7 @@ const Auth = () => {
                 {/* Warning for empty fields */}
                 {warning && (
                     <div>
-                        <p className='text-red-500 text-sm'>please enter username and password</p>
+                        <p className='text-red-500 text-sm'>please enter username(must contain letters) and password</p>
                     </div>
                 )}
 
