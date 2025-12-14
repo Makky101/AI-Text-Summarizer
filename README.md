@@ -2,19 +2,28 @@
 
 A modern, responsive web application that uses advanced AI models to summarize text content in real-time. Built with React, Express, and powered by Cohere AI and DistilBART for intelligent text summarization.
 
+![React](https://img.shields.io/badge/React-19.1.1-blue?logo=react)
+![Express](https://img.shields.io/badge/Express-5.1.0-black?logo=express)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue?logo=typescript)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-8.16.3-blue?logo=postgresql)
+
 ## 🚀 Features
 
-- **AI-Powered Summarization**: Leverages Cohere AI's command-a-03-2025 model for high-quality summaries, with DistilBART as a fallback
+- **AI-Powered Summarization**: Leverages Cohere AI's latest command models for high-quality summaries, with DistilBART as a fallback
 - **User Authentication**: Secure login and signup system with bcrypt password hashing and PostgreSQL storage
+- **User Profiles**: Display first letter of username in a circular avatar
 - **Real-time Typing Animation**: Smooth character-by-character display of AI-generated summaries
 - **Responsive Design**: Mobile-first design with Tailwind CSS for seamless experience across devices
 - **Dark/Light Theme**: Toggle between themes with persistent localStorage
 - **Input Validation**: Minimum 20-word requirement with special keyword recognition
-- **Easter Egg**: Ask "whoami" or similar questions to reveal the AI's identity
+- **Special queries**: Ask "whoami", "what's your name?", or similar questions to reveal the AI's identity
+- **Loading States**: Visual feedback during AI processing with animated spinner
+- **Social Authentication**: Google OAuth integration placeholder (ready for implementation)
 
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 19** - Modern JavaScript library for building user interfaces
 - **Vite** - Fast build tool and development server
 - **Tailwind CSS** - Utility-first CSS framework
@@ -22,6 +31,7 @@ A modern, responsive web application that uses advanced AI models to summarize t
 - **FontAwesome** - Icon library for UI elements
 
 ### Backend
+
 - **Express.js** - Web application framework for Node.js
 - **TypeScript** - Typed superset of JavaScript
 - **PostgreSQL** - Advanced open-source relational database
@@ -29,6 +39,7 @@ A modern, responsive web application that uses advanced AI models to summarize t
 - **CORS** - Cross-Origin Resource Sharing support
 
 ### AI Services
+
 - **Cohere AI** - Primary AI model for text summarization
 - **Hugging Face Inference** - Fallback AI model (DistilBART)
 
@@ -46,18 +57,21 @@ Before running this application, make sure you have the following installed:
 ## 🔧 Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/Makky101/AI-Text-Summarizer.git
    cd AI-Text-Summarizer
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Environment Setup:**
    Create a `.env` file in the root directory with the following variables:
+
    ```env
    # Database Configuration
    DB_USER=your_db_username
@@ -77,8 +91,9 @@ Before running this application, make sure you have the following installed:
 4. **Database Setup:**
    Create a PostgreSQL database and run the following SQL to create the users table:
    ```sql
-   CREATE TABLE cred (
+   CREATE TABLE credentials (
        username VARCHAR(255) PRIMARY KEY,
+       f_letter VARCHAR(1) NOT NULL,
        hashpassword VARCHAR(255) NOT NULL
    );
    ```
@@ -88,9 +103,11 @@ Before running this application, make sure you have the following installed:
 ### Development Mode
 
 1. **Start the backend server:**
+
    ```bash
    npm run dev-server
    ```
+
    This runs the TypeScript server with auto-reload using nodemon.
 
 2. **Start the frontend (in a new terminal):**
@@ -102,6 +119,7 @@ Before running this application, make sure you have the following installed:
 ### Production Mode
 
 1. **Build the frontend:**
+
    ```bash
    npm run build
    ```
@@ -151,13 +169,16 @@ src/
 ## 🎨 Features in Detail
 
 ### AI Summarization
+
 The application uses Cohere AI's advanced language model to generate concise, educational summaries. For research papers, textbooks, and documents, it produces student-friendly explanations with:
+
 - Clear, simple language
 - Key facts and concepts
 - Proper formatting for web display
 - Fallback to DistilBART if Cohere API is unavailable
 
 ### User Experience
+
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
 - **Loading Animation**: Visual feedback during AI processing
 - **Typing Effect**: Character-by-character display of summaries
@@ -165,6 +186,7 @@ The application uses Cohere AI's advanced language model to generate concise, ed
 - **Theme Persistence**: Remembers user's theme preference
 
 ### Security
+
 - Password hashing with bcrypt
 - Input sanitization and validation
 - CORS configuration for secure API access
