@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // import './auth.css'
 
 // Auth component handles Login and Sign Up
-const Auth = ({authTheme}) => {
+const Auth = ({authTheme, setRegistered, setFLetter}) => {
     // State variables for form inputs and UI state
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
@@ -12,7 +12,6 @@ const Auth = ({authTheme}) => {
     const [newUser, setNewUser] = useState(true)    // Determines which endpoint to call
     const [warning, setWarning] = useState(false)   // Show warning if fields empty
     const [errMsg, setErrMsg] = useState('')        // Store error messages from server
-    const [register, setRegister] = useState(false)
     let navigate = useNavigate()                    // React Router navigation hook
 
     // Function to handle Login or Sign Up requests
@@ -32,7 +31,10 @@ const Auth = ({authTheme}) => {
                 if (result.error) {
                     // Return error message if sign up fails
                     return (result.error)
+                }else if (result.letter){
+                    setFLetter(result.letter)
                 }
+                setRegistered(true) //newUser has been registered
             } catch (err) {
                 console.log(err.message) // Log network / fetch errors
             }
@@ -52,7 +54,11 @@ const Auth = ({authTheme}) => {
                 if (result.error) {
                     // Return error message if login fails
                     return (result.error)
+                }else if (result.letter){
+                    setFLetter(result.letter)
                 }
+
+                setRegistered(true) //user has been registered
             } catch (err) {
                 console.log(err.message) // Log network / fetch errors
             }

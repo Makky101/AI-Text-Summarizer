@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 //IMPORT IT INTO THE USERS INTERFACE
 
 // Main UI component for text summarization
-const Main_Page = ({theme, setTheme}) => {
+const Main_Page = ({theme, setTheme, registered, fLetter}) => {
     // State variables
     const [input, setInput] = useState("");                  // Stores user input
     const [summary, setSummary] = useState("");             // Full summary returned by AI
@@ -108,14 +108,16 @@ const Main_Page = ({theme, setTheme}) => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        {/*<button 
-                            className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                            onClick={() => navigate('/')}
-                        >
-                            Login
-                        </button>*/}
-
-                        <User letter={'L'}/>   
+                    {registered ?
+                        <User letter={fLetter}/>   
+                        :
+                            <button 
+                                className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                onClick={() => navigate('/')}
+                            >
+                                Login
+                            </button>
+                    }
 
                         <button aria-label="Toggle theme" className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => {
                             let color = theme === 'light' ? 'dark' : 'light'

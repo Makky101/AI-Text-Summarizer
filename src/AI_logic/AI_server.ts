@@ -88,7 +88,7 @@ async function summarizeUsingDistilbart(text: string) {
 app.post('/login', async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body;
-        const cmd = 'SELECT * FROM cred WHERE username = $1';
+        const cmd = 'SELECT * FROM credentials WHERE username = $1';
         const values = [username];
 
         // Query database for user
@@ -101,11 +101,14 @@ app.post('/login', async (req: Request, res: Response) => {
 
         const data = result.rows[0];
         const hash = data.hashpassword;
+        const fLetter = data.f_letter
 
-        // Validate password
+        // Validate password and send the first letter of username
         const validate = bcrypt.compareSync(password, hash);
         if (!validate) {
             return res.status(404).json({ error: 'username or password is incorrect' });
+        }else{
+            res.status(200).json({letter: fLetter})
         }
 
         // Could optionally return success message or token here
@@ -121,17 +124,24 @@ app.post('/signUp', async (req: Request, res: Response) => {
         const { username, password } = req.body;
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS!);
         const hash = bcrypt.hashSync(password, saltRounds);
+        let fLetter;
+
+        for(let i = 0; i < username.length; i++){
+            if(typeof username[i] === 'string'){
+                fLetter = username[i].toUpperCase()
+            }
+        }
 
         // Insert new user; ignore if username already exists
-        const cmd = 'INSERT INTO cred (username, hashPassword) VALUES ($1, $2) ON CONFLICT(username) DO NOTHING RETURNING *;';
-        const values = [username, hash];
+        const cmd = 'INSERT INTO credentials (username,f_letter, hashpassword) VALUES ($1, $2, $3) ON CONFLICT(username) DO NOTHING RETURNING *;';
+        const values = [username, fLetter, hash];
         const result = await pool.query(cmd, values);
 
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'username already exists' });
         }
 
-        res.status(200).json({ message: 'User signed up successfully' });
+        res.status(200).json({ message: 'User signed up successfully',letter: fLetter });
     } catch (err: any) {
         console.error(err);
         res.status(500).json({ error: 'An issue occurred during sign up' });
