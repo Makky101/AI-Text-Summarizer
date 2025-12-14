@@ -27,15 +27,16 @@ body::-webkit-scrollbar {
     gap:10px;
     margin-left: auto;
 }
+*/
 
 .login-btn{
-    padding: 6px 12px;
+    /*padding: 6px 12px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     background: dodgerblue;
     color: white;
-    font-size: 14px;
+    font-size: 14px;*/
     transition: 0.3s transform ease-in
 }
 
@@ -43,11 +44,11 @@ body::-webkit-scrollbar {
     transform: scale(1.05);
 }
 
-body::-webkit-scrollbar {
-    display: none;
-
+.profile{
+    font-weight: bolder;
+    font-size: larger;
 }
-
+/*
 h2 {
     text-align: center;
     font-size: 3rem;

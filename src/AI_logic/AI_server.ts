@@ -125,10 +125,12 @@ app.post('/signUp', async (req: Request, res: Response) => {
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS!);
         const hash = bcrypt.hashSync(password, saltRounds);
         let fLetter;
+        const Alphabets = /[a-zA-Z]/
 
         for(let i = 0; i < username.length; i++){
-            if(typeof username[i] === 'string'){
+            if(Alphabets.test(username[i])){
                 fLetter = username[i].toUpperCase()
+                break
             }
         }
 

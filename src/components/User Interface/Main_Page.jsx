@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import './UI.css'
 import User from './profile'
 // import "./resp.css";
 import { nameQuestions } from "../names";  // List of keywords for special inputs
@@ -112,7 +113,7 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
                         <User letter={fLetter}/>   
                         :
                             <button 
-                                className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white login-btn dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                 onClick={() => navigate('/')}
                             >
                                 Login
