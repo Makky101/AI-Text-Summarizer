@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./UI.css";
+import User from './profile'
 // import "./resp.css";
 import { nameQuestions } from "../names";  // List of keywords for special inputs
 import { useNavigate } from "react-router-dom";
@@ -108,12 +108,14 @@ const Main_Page = ({theme, setTheme}) => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <button 
+                        {/*<button 
                             className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             onClick={() => navigate('/')}
                         >
                             Login
-                        </button>
+                        </button>*/}
+
+                        <User letter={'L'}/>   
 
                         <button aria-label="Toggle theme" className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => {
                             let color = theme === 'light' ? 'dark' : 'light'
@@ -131,7 +133,7 @@ const Main_Page = ({theme, setTheme}) => {
                 <h3 className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3">Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered intelligence</h3>
             </div>
 
-            <div className="flex flex-col lg:flex-row justify-center gap-6 p-4 sm:p-6 min-h-[60vh] h-auto max-w-5xl mx-auto">
+            <div className="flex flex-col lg:flex-row justify-center gap-6 p-4 sm:p-6 min-h-[60vh] h-auto max-w-80xl mx-auto">
                 {/* INPUT BOX */}
                 <div className={`flex flex-col gap-3 transition-all duration-500 ease-out min-h-[250px] sm:min-h-[300px] 
                     ${shift ? "lg:w-5/12 lg:-translate-x-2.5 w-full" : "w-full lg:w-7/12"}
@@ -142,12 +144,12 @@ const Main_Page = ({theme, setTheme}) => {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         aria-label="Text input for summarization"
-                    />        
+                    />     
                 </div>
 
                 {/* OUTPUT BOX */}
                 {expanded && (
-                    <div className={`min-h-[200px] max-h-[350px] sm:min-h-[300px] bg-white dark:bg-[#111] border output-box border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
+                    <div className={`min-h-[200px] max-h-[450px] sm:min-h-[300px] bg-white dark:bg-[#111] border output-box border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
                         ${expanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`
                     }>
                         {loading ? 
@@ -169,7 +171,7 @@ const Main_Page = ({theme, setTheme}) => {
             </div>
             
             {/* BUTTONS */}
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-80 mt-4 w-full pb-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-8 mt-4 w-full pb-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Submit button for AI summarization */}
                 <button aria-label="Enter" className="px-4 py-2 rounded-xl border-none cursor-pointer bg-blue-600 dark:bg-blue-600 hover:bg-blue-500 text-white text-lg w-full sm:w-auto transition-transform duration-300 hover:scale-110 flex items-center justify-center gap-2 shadow-sm" onClick={Ask_AI}>
                     <i className="fa-solid fa-arrow-right-to-bracket" />

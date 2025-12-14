@@ -1,10 +1,11 @@
-const Profile = ({letter}) => {
-    {/* Profile picture */}
+function User({letter}){
+  return(
     <div className="flex justify-center">
-      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-400 flex items-center justify-center text-gray-700 text-sm sm:text-base">
+      <div className="w-10 h-10 sm:w-10 sm:10 rounded-full bg-gray-400 flex items-center justify-center text-gray-700 text-sm sm:text-base">
         {letter}
-      </div>
+      </div>{/* Profile picture */}
     </div>
+  )
 }
 
-export default Profile
+export default User
