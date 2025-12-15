@@ -14,6 +14,9 @@ import bcrypt from 'bcrypt';
 // Enable Cross-Origin Resource Sharing
 import cors from 'cors';
 
+import session from 'express-session';
+
+
 // AI clients
 import { CohereClientV2 } from 'cohere-ai';
 import { InferenceClient } from '@huggingface/inference';
@@ -22,6 +25,16 @@ import { InferenceClient } from '@huggingface/inference';
 const app = express();
 app.use(cors());          // Enable CORS
 app.use(express.json());  // Parse JSON request bodies
+app.use(
+    session({
+        secret: String(process.env.SESSION_SECRET),
+        resave: false,
+        saveUninitialized: false,
+        cookie:{
+            maxAge: 1000 * 60 * 60 * 24 * 60
+        }
+    })
+);
 
 // PostgreSQL connection pool
 const pool = new Pool({
@@ -65,6 +78,14 @@ const instruction = (text: string, main: boolean) => {
     }
 };
 
+function isAuthenticated(req:Request, res:Response, next:any){
+    if((req.session as any).user){
+        next(); //user is logged in
+    } else{
+        res.redirect('/')
+    }
+}
+
 // Summarize text using Cohere AI
 async function summarizeUsingCohere(text: string) {
     const response: any = await co.chat({
@@ -83,6 +104,14 @@ async function summarizeUsingDistilbart(text: string) {
     });
     return output.summary_text;
 }
+
+app.post('/check-session', (req:Request, res: Response) => {
+    if((req.session as any).user) {
+        res.json({loggedIn: true, user: (req.session as any).user})
+    }else{
+        res.json({loggedIn: false})
+    }
+})
 
 // Login endpoint
 app.post('/login', async (req: Request, res: Response) => {
@@ -107,9 +136,16 @@ app.post('/login', async (req: Request, res: Response) => {
         const validate = bcrypt.compareSync(password, hash);
         if (!validate) {
             return res.status(404).json({ error: 'username or password is incorrect' });
-        }else{
-            res.status(200).json({letter: fLetter})
         }
+
+        //store session for 2 months
+        (req.session as any).user = {
+            username: data.username,
+            email: data.email,
+            fLetter: fLetter
+        }
+
+        res.status(200).json({letter: fLetter, message: 'Login successful'})
 
         // Could optionally return success message or token here
     } catch (err: any) {
@@ -121,7 +157,7 @@ app.post('/login', async (req: Request, res: Response) => {
 // Sign-up endpoint
 app.post('/signUp', async (req: Request, res: Response) => {
     try {
-        const { username, password } = req.body;
+        const { username, password, email } = req.body;
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS!);
         const hash = bcrypt.hashSync(password, saltRounds);
         let fLetter;
@@ -135,12 +171,21 @@ app.post('/signUp', async (req: Request, res: Response) => {
         }
 
         // Insert new user; ignore if username already exists
-        const cmd = 'INSERT INTO credentials (username,f_letter, hashpassword) VALUES ($1, $2, $3) ON CONFLICT(username) DO NOTHING RETURNING *;';
-        const values = [username, fLetter, hash];
+        const cmd = 'INSERT INTO credentials (username,f_letter, email, hashpassword) VALUES ($1, $2, $3, $4) ON CONFLICT(username) DO NOTHING RETURNING *;';
+        const values = [username, fLetter, email, hash];
         const result = await pool.query(cmd, values);
 
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'username already exists' });
+        };
+
+        const newUser = result.rows[0];
+
+        //Store session for 2 months as soon as user signs up
+        (req.session as any).user = {
+            username: newUser.username,
+            email: newUser.email,
+            fLetter: newUser.f_letter
         }
 
         res.status(200).json({ message: 'User signed up successfully',letter: fLetter });
@@ -151,7 +196,7 @@ app.post('/signUp', async (req: Request, res: Response) => {
 });
 
 // Summarize endpoint
-app.post('/summarize', async (req: Request, res: Response) => {
+app.post('/summarize',isAuthenticated, async (req: Request, res: Response) => {
     const text = req.body.text;
     // This is a joke 😏
     if (text === 'whoami') {

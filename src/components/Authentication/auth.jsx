@@ -12,8 +12,30 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
     const [newUser, setNewUser] = useState(true)    // Determines which endpoint to call
     const [warning, setWarning] = useState(false)   // Show warning if fields empty
     const [errMsg, setErrMsg] = useState('')        // Store error messages from server
+    const [email, setEmail] = useState('')
     let navigate = useNavigate()                    // React Router navigation hook
 
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try{
+                const response = await fetch('/check-session', {
+                    credentials: 'include'
+                });
+        
+                const result = await response.json();
+                if (result.loggedIn) {
+                    setFLetter(result.user.fLetter);
+                    setRegistered(true);
+                    navigate('/home');
+                }
+            }catch(err){
+                console.error(err.message)
+            }
+        };
+    
+        checkSession();
+    },[])
     // Function to handle Login or Sign Up requests
     async function handleAuth() {
         if (newUser) {
@@ -109,6 +131,16 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+
+                {/* Email input */}
+                <input
+                    className="p-3 text-base rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-500/20 transition-all"
+                    type="text"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                 />
 

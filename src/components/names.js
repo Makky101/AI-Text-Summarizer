@@ -1,3 +1,4 @@
+// Keywords that trigger the special "whoami" response from the AI
 export const nameQuestions = [
     "what is your name",
     "who are you",

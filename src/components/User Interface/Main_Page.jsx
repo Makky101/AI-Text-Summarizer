@@ -24,24 +24,29 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
 
     let navigate = useNavigate()  // React Router navigation
 
-    // Function to handle text summarization
+    // Function to handle text summarization requests
     async function Ask_AI(e) {
         e.preventDefault()
 
-        const joke = 'whoami'; // Special command for AI
+        // Special "whoami" command that triggers a fun AI response
+        const joke = 'whoami';
+
+        // Check if input contains keywords that should trigger the special command
         const checkWord = nameQuestions.some(s => input.toLowerCase().includes(s));
 
-        // Ignore empty input or purely numeric input
+        // Early validation: ignore empty input or purely numeric input
         if (!input.trim() || !isNaN(input)) return;
 
         let text = input.trim()
 
-        // Require a minimum word count unless special command is detected
+        // Minimum word count validation (20 words) unless special command detected
         if (wordCount < 20) {
             if (checkWord) {
-                text = joke; // Send special "whoami" command
+                // Use special command for keyword-based inputs
+                text = joke;
             } else {
-                move(true); // Trigger animation for small input
+                // Show UI feedback for insufficient text length
+                move(true); // Trigger input box animation
                 setSummary("Please enter a reasonable amount of text to summarize");
                 return;
             }
