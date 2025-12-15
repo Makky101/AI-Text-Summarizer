@@ -58,9 +58,15 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
         // Send POST request to backend summarization endpoint
         const response = await fetch('http://localhost:3000/summarize', {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: text }),
-        })
+        });
+
+        if (response.status === 401) {
+            // Redirect to login if session expired
+            return navigate('/');
+        }
 
         const result = await response.json()
 

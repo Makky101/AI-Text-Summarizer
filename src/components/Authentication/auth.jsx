@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // import './auth.css'
 
 // Auth component handles Login and Sign Up
-const Auth = ({authTheme, setRegistered, setFLetter}) => {
+const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
     // State variables for form inputs and UI state
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
@@ -15,27 +15,9 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
     const [email, setEmail] = useState('')
     let navigate = useNavigate()                    // React Router navigation hook
 
-
-    useEffect(() => {
-        const checkSession = async () => {
-            try{
-                const response = await fetch('/check-session', {
-                    credentials: 'include'
-                });
-        
-                const result = await response.json();
-                if (result.loggedIn) {
-                    setFLetter(result.user.fLetter);
-                    setRegistered(true);
-                    navigate('/home');
-                }
-            }catch(err){
-                console.error(err.message)
-            }
-        };
-    
-        checkSession();
-    },[])
+    if(registered){
+        navigate('/home')
+    }
     // Function to handle Login or Sign Up requests
     async function handleAuth() {
         if (newUser) {
@@ -43,10 +25,12 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
             try {
                 const response = await fetch('http://localhost:3000/signUp', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         username: username.trim(),
                         password: password.trim(),
+                        email: email.trim()
                     })
                 })
                 const result = await response.json()
@@ -66,10 +50,11 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
             try {
                 const response = await fetch('http://localhost:3000/login', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         username: username.trim(),
-                        password: password.trim(),
+                        password: password.trim()
                     })
                 })
                 const result = await response.json()
@@ -90,8 +75,12 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
 
     // Function triggered when user clicks Login / Sign Up button
     async function proceed() {
-        // Show warning if username or password is empty or username is completely a number
-        if (!username || !password || !isNaN(username)) return setWarning(!warning);
+        // Show warning if username or password or email is empty or username is completely a number
+        if (!username || !password || !isNaN(username)){ 
+            return setWarning(!warning)
+        }else if(newUser && !email){
+            return setWarning(!warning)
+        }
 
         const message = await handleAuth()
         if (message) return setErrMsg(message) // Show server error if exists
@@ -135,14 +124,15 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
                 />
 
                 {/* Email input */}
-                <input
+               { newUser && (<input
                     className="p-3 text-base rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-500/20 transition-all"
                     type="text"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                />
+                />)
+                }
 
                 {/* Password input */}
                 <input
@@ -157,7 +147,7 @@ const Auth = ({authTheme, setRegistered, setFLetter}) => {
                 {/* Warning for empty fields */}
                 {warning && (
                     <div>
-                        <p className='text-red-500 text-sm'>please enter username(must contain letters) and password</p>
+                        <p className='text-red-500 text-sm'>please enter username(must contain letters),email and password</p>
                     </div>
                 )}
 

@@ -10,13 +10,14 @@ A modern, responsive web application that uses advanced AI models to summarize t
 ## 🚀 Features
 
 - **AI-Powered Summarization**: Leverages Cohere AI's latest command models for high-quality summaries, with DistilBART as a fallback
-- **User Authentication**: Secure login and signup system with bcrypt password hashing and PostgreSQL storage
+- **Session-Based Authentication**: Secure login and signup with Express sessions, bcrypt password hashing, and PostgreSQL storage
+- **Persistent Login**: Stay logged in across browser sessions with automatic session management
 - **User Profiles**: Display first letter of username in a circular avatar
 - **Real-time Typing Animation**: Smooth character-by-character display of AI-generated summaries
 - **Responsive Design**: Mobile-first design with Tailwind CSS for seamless experience across devices
 - **Dark/Light Theme**: Toggle between themes with persistent localStorage
 - **Input Validation**: Minimum 20-word requirement with special keyword recognition
-- **Special queries**: Ask "whoami", "what's your name?", or similar questions to reveal the AI's identity
+- **Special Queries**: Ask "whoami", "what's your name?", or similar questions to reveal the AI's identity
 - **Loading States**: Visual feedback during AI processing with animated spinner
 - **Social Authentication**: Google OAuth integration placeholder (ready for implementation)
 
@@ -86,6 +87,7 @@ Before running this application, make sure you have the following installed:
 
    # Security
    BCRYPT_SALT_ROUNDS=12
+   SESSION_SECRET=your_random_session_secret_string
    ```
 
 4. **Database Setup:**
@@ -94,6 +96,7 @@ Before running this application, make sure you have the following installed:
    CREATE TABLE credentials (
        username VARCHAR(255) PRIMARY KEY,
        f_letter VARCHAR(1) NOT NULL,
+       email VARCHAR(255) UNIQUE NOT NULL,
        hashpassword VARCHAR(255) NOT NULL
    );
    ```

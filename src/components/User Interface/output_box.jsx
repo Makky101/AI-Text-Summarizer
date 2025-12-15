@@ -8,7 +8,7 @@ function Output({expanded, loading, displayedSummary}){
     return(
         // Only render when expanded is true, with conditional animation
         expanded && (
-            <div className={`min-h-[200px] max-h-[450px] sm:min-h-[300px] bg-white dark:bg-[#111] border output-box border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
+            <div className={`min-h-[200px] max-h-[350px] sm:min-h-[300px] bg-white dark:bg-[#111] border output-box border-gray-200 dark:border-gray-800 p-4 sm:p-5 rounded-xl shadow-md dark:shadow-none overflow-y-auto transition-all duration-500 ease-out order-2 lg:order-none w-full lg:w-5/12
                 ${expanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`
             }>
 

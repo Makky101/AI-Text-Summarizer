@@ -23,7 +23,7 @@ import { InferenceClient } from '@huggingface/inference';
 
 // Initialize Express app
 const app = express();
-app.use(cors());          // Enable CORS
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));  // Enable CORS with credentials
 app.use(express.json());  // Parse JSON request bodies
 app.use(
     session({
@@ -31,7 +31,10 @@ app.use(
         resave: false,
         saveUninitialized: false,
         cookie:{
-            maxAge: 1000 * 60 * 60 * 24 * 60
+            maxAge: 1000 * 60 * 60 * 24 * 60,
+            httpOnly: true,  // Security: prevent client-side access
+            secure: false,    // Set to true in production with HTTPS
+            sameSite: 'lax'
         }
     })
 );
@@ -78,11 +81,13 @@ const instruction = (text: string, main: boolean) => {
     }
 };
 
+// Middleware to check if user is authenticated via session
+// Redirects to login page if not authenticated
 function isAuthenticated(req:Request, res:Response, next:any){
     if((req.session as any).user){
         next(); //user is logged in
     } else{
-        res.redirect('/')
+        res.status(401).json({ loggedIn: false });
     }
 }
 
@@ -105,7 +110,8 @@ async function summarizeUsingDistilbart(text: string) {
     return output.summary_text;
 }
 
-app.post('/check-session', (req:Request, res: Response) => {
+// Endpoint to check if user session is active
+app.get('/check-session', (req:Request, res: Response) => {
     if((req.session as any).user) {
         res.json({loggedIn: true, user: (req.session as any).user})
     }else{
@@ -160,6 +166,7 @@ app.post('/signUp', async (req: Request, res: Response) => {
         const { username, password, email } = req.body;
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS!);
         const hash = bcrypt.hashSync(password, saltRounds);
+        // Extract first letter from username (must be alphabetic)
         let fLetter;
         const Alphabets = /[a-zA-Z]/
 
@@ -198,7 +205,7 @@ app.post('/signUp', async (req: Request, res: Response) => {
 // Summarize endpoint
 app.post('/summarize',isAuthenticated, async (req: Request, res: Response) => {
     const text = req.body.text;
-    // This is a joke 😏
+    // This is a joke!
     if (text === 'whoami') {
         return res.json({ summary: 'I am Markie, an AI model trained by Makky.' });
     }

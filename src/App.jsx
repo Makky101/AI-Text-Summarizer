@@ -1,5 +1,6 @@
 import Main_Page from './components/User Interface/Main_Page'
 import Auth from './components/Authentication/auth'
+import { useEffect } from 'react'
 import { useState } from 'react'
 import { BrowserRouter,Routes, Route} from 'react-router-dom'
 
@@ -14,12 +15,33 @@ function App() {
   // User profile state: stores the first letter of the username for avatar display
   const [fLetter, setFLetter] = useState('');
 
+  useEffect(() => {
+    const checkSession = async () => {
+        try{
+            const response = await fetch('http://localhost:3000/check-session', {
+                credentials: 'include',
+                method: 'GET'
+            });
+
+            const result = await response.json();
+            if (result.loggedIn) {
+              setFLetter(result.user.fLetter);
+              setRegistered(true);
+            }
+        }catch(err){
+            console.error('Session check failed:', err.message)
+        }
+    };
+
+    checkSession();
+  },[])
+
   return(
     // BrowserRouter enables client-side routing
     <BrowserRouter>
         <Routes>
             {/* Authentication route: handles login/signup */}
-            <Route path='/' element={<Auth authTheme={theme} setRegistered={setRegistered} setFLetter={setFLetter}/>}/>
+            <Route path='/' element={<Auth authTheme={theme} setRegistered={setRegistered} registered={registered} setFLetter={setFLetter}/>}/>
             {/* Main application route: text summarization interface */}
             <Route path='/home' element={<Main_Page theme={theme} fLetter={fLetter} setTheme={setTheme} registered={registered}/>}/>
         </Routes>
