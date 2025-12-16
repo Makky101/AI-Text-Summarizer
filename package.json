@@ -6,6 +6,7 @@
   "scripts": {
     "dev-backend": "nodemon --watch src --ext ts --exec \"npx ts-node src/AI_logic/AI_server.ts\"",
     "dev-frontend": "vite",
+    "build-backend": "tsc",
     "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\"",
     "build-frontend": "vite build",
     "start-backend": "node src/AI_logic/dist/AI_server.js",
