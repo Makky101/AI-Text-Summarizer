@@ -70,7 +70,7 @@ async (request, accessToken, refreshToken, profile, done) => {
         if (result.rows.length === 0) {
             // Create new user
             const insertCmd = 'INSERT INTO credentials (username, f_letter, email, hashpassword) VALUES ($1, $2, $3, $4) RETURNING *';
-            const insertResult = await pool.query(insertCmd, [username, firstLetter, email, NA]);
+            const insertResult = await pool.query(insertCmd, [username, firstLetter, email, baseUsername]);
             user = insertResult.rows[0];
         } else {
             user = result.rows[0];
