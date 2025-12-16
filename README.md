@@ -7,6 +7,11 @@ A modern, responsive web application that uses advanced AI models to summarize t
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue?logo=typescript)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-8.16.3-blue?logo=postgresql)
 
+## 🌐 Live Deployment
+
+- **Frontend**: https://ai-platform-three-phi.vercel.app/
+- **Backend**: https://ai-server-hyua.onrender.com/
+
 ## 🚀 Features
 
 - **AI-Powered Summarization**: Leverages Cohere AI's latest command models for high-quality summaries, with DistilBART as a fallback
