@@ -63,12 +63,14 @@ async (request, accessToken, refreshToken, profile, done) => {
         const cmd = 'SELECT * FROM credentials WHERE email = $1';
         const result = await pool.query(cmd, [email]);
 
-        const NA = 'N/A'
+        const baseUsername = 'N/A';
+        const uniqueSuffix = Date.now(); // or generate random string
+        const username = `${baseUsername}_${uniqueSuffix}`;
         let user;
         if (result.rows.length === 0) {
             // Create new user
             const insertCmd = 'INSERT INTO credentials (username, f_letter, email, hashpassword) VALUES ($1, $2, $3, $4) RETURNING *';
-            const insertResult = await pool.query(insertCmd, [NA, firstLetter, email, NA]);
+            const insertResult = await pool.query(insertCmd, [username, firstLetter, email, NA]);
             user = insertResult.rows[0];
         } else {
             user = result.rows[0];
