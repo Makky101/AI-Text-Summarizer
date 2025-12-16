@@ -37,7 +37,7 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 60,
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'lax'
     }
   })
@@ -54,7 +54,7 @@ const pool = new Pool({
   host: process.env.HOST,
   database: process.env.DB,
   password: process.env.PASSWORD,
-  port: Number(process.env.PORT) || 5432,
+  port: Number(process.env.DB_PORT) || 5432,
   ssl: { rejectUnauthorized: false }
 });
 
