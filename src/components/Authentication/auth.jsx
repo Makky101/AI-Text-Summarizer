@@ -92,9 +92,9 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
 
     }
 
-    // Placeholder function for Google authentication
+    // Function for Google authentication
     function handleGoogleAuth() {
-        return
+        window.location.href = 'http://localhost:3000/auth/google';
     }
 
     // Toggle dark/light mode by modifying body for the authentication side
@@ -159,15 +159,22 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
                 )}
 
                 {/* Submit button */}
-                <button 
-                    className='p-3 text-base rounded-lg border-none cursor-pointer bg-blue-600 dark:bg-blue-600 hover:bg-blue-500 text-white font-medium transition-transform duration-200 hover:scale-105 shadow-sm' 
-                    onClick={proceed} 
+                <button
+                    className='p-3 text-base rounded-lg border-none cursor-pointer bg-blue-600 dark:bg-blue-600 hover:bg-blue-500 text-white font-medium transition-transform duration-200 hover:scale-105 shadow-sm'
+                    onClick={proceed}
                     type="submit"
                 >
                     {isLogin ? "Login" : "Sign Up"}
                 </button>
 
             </form>
+
+            {/* Divider */}
+            <div className="mt-6 flex items-center justify-center">
+                <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+                <span className="px-3 text-sm text-gray-500 dark:text-gray-400">or</span>
+                <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+            </div>
 
             {/* Google Authentication button */}
             <div className="mt-4 flex items-center justify-center">

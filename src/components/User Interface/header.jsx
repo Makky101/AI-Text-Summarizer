@@ -24,17 +24,36 @@ function Heading({fLetter, setTheme, theme, registered}){
 
                     {/* User controls: profile/login and theme toggle */}
                     <div className="flex items-center gap-3">
-                        {/* Show user profile if logged in, otherwise show login button */}
-                        {registered ?
-                            <User letter={fLetter}/>
-                            :
+                        {/* Show user profile and logout if logged in, otherwise show login button */}
+                        {registered ? (
+                            <div className="flex items-center gap-2">
+                                <User letter={fLetter}/>
+                                <button
+                                    className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    onClick={async () => {
+                                        try {
+                                            await fetch('http://localhost:3000/logout', {
+                                                method: 'GET',
+                                                credentials: 'include'
+                                            });
+                                            navigate('/');
+                                            window.location.reload(); // To reset state
+                                        } catch (err) {
+                                            console.error('Logout failed:', err);
+                                        }
+                                    }}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
                             <button
                                 className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white login-btn dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                 onClick={() => navigate('/')}
                             >
                                 Login
                             </button>
-                        }
+                        )}
 
                         {/* Theme toggle button with moon/sun icon */}
                         <button aria-label="Toggle theme" className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => {

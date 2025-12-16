@@ -16,6 +16,9 @@ import cors from 'cors';
 
 import session from 'express-session';
 
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
+
 
 // AI clients
 import { CohereClientV2 } from 'cohere-ai';
@@ -38,6 +41,57 @@ app.use(
         }
     })
 );
+app.use(passport.initialize())
+app.use(passport.session())
+
+// Google OAuth Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    callbackURL: "http://localhost:3000/auth/google/callback",
+    passReqToCallback: true
+},
+async (request: any, accessToken: string, refreshToken: string, profile: any, done: any) => {
+    try {
+        const email = profile.emails[0].value;
+        const displayName = profile.displayName;
+        const firstLetter = displayName ? displayName.charAt(0).toUpperCase() : 'U';
+
+        // Check if user exists
+        const cmd = 'SELECT * FROM credentials WHERE email = $1';
+        const result = await pool.query(cmd, [email]);
+
+        const NA = 'N/A'
+        let user;
+        if (result.rows.length === 0) {
+            // Create new user
+            const insertCmd = 'INSERT INTO credentials (username, f_letter, email, hashpassword) VALUES ($1, $2, $3, $4) RETURNING *';
+            const insertResult = await pool.query(insertCmd, [NA, firstLetter, email, NA]);
+            user = insertResult.rows[0];
+        } else {
+            user = result.rows[0];
+        }
+
+        return done(null, user);
+    } catch (err) {
+        return done(err, null);
+    }
+}));
+
+passport.serializeUser((user: any, done : any) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id: number, done :any) => {
+    try {
+        const cmd = 'SELECT * FROM credentials WHERE id = $1';
+        const result = await pool.query(cmd, [id]);
+        done(null, result.rows[0]);
+    } catch (err) {
+        done(err, null);
+    }
+});
+
 
 // PostgreSQL connection pool
 const pool = new Pool({
@@ -61,7 +115,7 @@ const instruction = (text: string, main: boolean) => {
         // Returns a formatted instruction for summarization
         return `
         You are an intelligent summarizer for educational material (research papers, textbooks, or student notes).
-        Produce a **short, clear, simple, student-friendly summary** in **plain text** that will render well in a browser.
+        Produce a **short, clear, simple, user-friendly summary** in **plain text** that will render well in a browser.
 
         Requirements:
         1. Explain the material in **simple language**, as if teaching a student, avoiding complex terms unless necessary.
@@ -200,6 +254,33 @@ app.post('/signUp', async (req: Request, res: Response) => {
         console.error(err);
         res.status(500).json({ error: 'An issue occurred during sign up' });
     }
+});
+
+// Google auth routes
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req: Request, res: Response) => {
+    // Successful authentication, set session
+    (req.session as any).user = {
+      username: ((req as any).user as any).username,
+      email: ((req as any).user as any).email,
+      fLetter: ((req as any).user as any).f_letter
+    };
+    res.redirect('http://localhost:5173/home');
+  });
+
+// Logout endpoint
+app.get('/logout', (req: Request, res: Response) => {
+  (req as any).logout((err: any) => {
+    if (err) return res.status(500).json({ error: 'Logout failed' });
+    req.session.destroy((err) => {
+      if (err) return res.status(500).json({ error: 'Session destroy failed' });
+      res.json({ loggedIn: false });
+    });
+  });
 });
 
 // Summarize endpoint
