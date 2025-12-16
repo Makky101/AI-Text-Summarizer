@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     const checkSession = async () => {
         try{
-            const response = await fetch('http://localhost:3000/check-session', {
+            const response = await fetch('https://ai-server-hyua.onrender.com/check-session', {
                 credentials: 'include',
                 method: 'GET'
             });

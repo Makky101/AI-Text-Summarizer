@@ -23,7 +23,7 @@ import { InferenceClient } from '@huggingface/inference';
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://ai-platform-three-phi.vercel.app',
   credentials: true
 }));
 
