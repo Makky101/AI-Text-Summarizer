@@ -44,6 +44,8 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
+let Authorize = false
+
 // Google OAuth Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID!,
@@ -114,18 +116,18 @@ const instruction = (text: string, main: boolean) => {
     if (main) {
         // Returns a formatted instruction for summarization
         return `
-        You are an intelligent summarizer for educational material (research papers, textbooks, or student notes).
-        Produce a **short, clear, simple, user-friendly summary** in **plain text** that will render well in a browser.
+        You are an intelligent summarizer for educational material, such as research papers, textbooks, or student notes.
 
-        Requirements:
-        1. Explain the material in **simple language**, as if teaching a student, avoiding complex terms unless necessary.
-        2. Keep the summary **short and concise**, focusing only on the most important facts, dates, achievements, and concepts.
-        3. Start with a **brief paragraph** summarizing the main ideas in an easy-to-understand way.
-        4. Add **key points below the paragraph**, each on a **new line** with a simple bullet or dash, but keep them minimal.
-        5. Use **natural spacing, line breaks, and indentation** for readability on a web page.
-        6. Do **not** include labels like "Document Type", "Summary", headings, mindmaps, or Markdown syntax.
+        Instructions:
+        1. Write a short, clear, and simple summary in plain text. **Do not use bold, italics, asterisks, or any Markdown formatting**.
+        2. Explain the material in simple language as if teaching a student, avoiding complex terms unless necessary.
+        3. Start with a brief paragraph summarizing the main ideas in an easy-to-understand way.
+        4. Below the paragraph, list the key points on separate lines, each starting with a simple dash or bullet. Keep them minimal and easy to read.
+        5. Use natural spacing, line breaks, and indentation for readability in a web browser.
+        6. Do not include headings, labels like "Summary" or "Document Type", mindmaps, or any extra formatting.
 
-        Use your own style for spacing and formatting so it looks clean and readable in a browser.
+        Produce a clean, plain text summary that is concise, easy to read, and structured for display on a web page.
+
 
         Here is the text to summarize:
         ${text}
@@ -138,11 +140,17 @@ const instruction = (text: string, main: boolean) => {
 // Middleware to check if user is authenticated via session
 // Redirects to login page if not authenticated
 function isAuthenticated(req:Request, res:Response, next:any){
-    if((req.session as any).user){
-        next(); //user is logged in
-    } else{
-        res.status(401).json({ loggedIn: false });
+    if(!Authorize){
+        if((req.session as any).user){
+            Authorize = true
+            next(); //user is logged in
+        } else{
+            res.status(401).json({ loggedIn: false });
+        }
+    }else{
+        next();
     }
+    
 }
 
 // Summarize text using Cohere AI

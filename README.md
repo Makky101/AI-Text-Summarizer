@@ -111,8 +111,7 @@ Before running this application, make sure you have the following installed:
    To enable Google authentication:
    - Go to the [Google Cloud Console](https://console.cloud.google.com/)
    - Create a new project or select an existing one
-   - Enable the Google+ API
-   - Create OAuth 2.0 credentials
+   - Create OAuth 2.0 credentials (Client ID and Client Secret)
    - Add `http://localhost:3000/auth/google/callback` as an authorized redirect URI
    - Add your Client ID and Client Secret to the `.env` file
 
