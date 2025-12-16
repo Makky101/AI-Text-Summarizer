@@ -185,8 +185,8 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
                     <i className="fa-brands fa-google text-red-500"></i>
                     Continue with Google
                 </button>
-                <p className='text-red-500 text-sm'>Google authentication has some issues that i do not plan to fix anytime soon but you can still use it!</p>
             </div>
+            <p className='text-red-500 text-sm'>Google authentication has some issues that i do not plan to fix anytime soon but you can still use it!</p>
 
             {/* Toggle between Login and Sign Up */}
             <p className="mt-4 text-sm text-gray-600">
