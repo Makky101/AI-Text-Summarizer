@@ -102,6 +102,7 @@ const pool = new Pool({
     database: process.env.DB,
     password: process.env.PASSWORD,
     port: Number(process.env.PORT),
+    ssl: { rejectUnauthorized: false }
 });
 
 // Port the server will listen on
