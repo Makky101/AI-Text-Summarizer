@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "./dir",
+    "outDir": "./src/AI_logic/dist",
     "allowSyntheticDefaultImports": true
   },
   "include": [
