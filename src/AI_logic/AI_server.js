@@ -280,7 +280,7 @@ app.get('/auth/google/callback',
       email: req.user.email,
       fLetter: req.user.f_letter
     };
-    res.redirect('https://ai-server-hyua.onrender.com/home');
+    res.redirect('https://ai-platform-three-phi.vercel.app/home');
   });
 
 // Logout endpoint
