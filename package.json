@@ -4,16 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev-backend": "nodemon --watch src --ext ts --exec \"npx ts-node src/AI_logic/AI_server.ts\"",
+    "dev-backend": "nodemon src/AI_logic/AI_server.js",
     "dev-frontend": "vite",
-    "build-backend": "tsc",
     "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\"",
+
     "build-frontend": "vite build",
-    "start-backend": "node src/AI_logic/dist/AI_server.js",
+
+    "start-backend": "node src/AI_logic/AI_server.js",
     "start": "npm run start-backend",
+
     "preview-frontend": "vite preview",
-    "lint": "eslint .",
-    "vigilante": "tsc --watch"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@fortawesome/react-fontawesome": "^3.1.1",
@@ -24,7 +25,6 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-session": "^1.18.2",
-    "npm": "^11.6.4",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-local": "^1.0.0",
@@ -36,16 +36,6 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@tailwindcss/vite": "^4.1.17",
-    "@types/bcrypt": "^6.0.0",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/express-session": "^1.18.2",
-    "@types/node": "^24.10.1",
-    "@types/passport": "^1.0.17",
-    "@types/passport-google-oauth2": "^0.1.10",
-    "@types/pg": "^8.15.6",
-    "@types/react": "^19.1.16",
-    "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
     "autoprefixer": "^10.4.22",
     "concurrently": "^9.2.1",
@@ -56,8 +46,6 @@
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
     "vite": "^7.1.7"
   }
 }
