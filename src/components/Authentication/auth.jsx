@@ -186,7 +186,6 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
                     Continue with Google
                 </button>
             </div>
-            <p className='text-red-500 text-sm'>Google auth has issues, but it’s still usable!</p>
 
             {/* Toggle between Login and Sign Up */}
             <p className="mt-4 text-sm text-gray-600">
