@@ -7,12 +7,9 @@
     "dev-backend": "nodemon src/AI_logic/AI_server.js",
     "dev-frontend": "vite",
     "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\"",
-
     "build-frontend": "vite build",
-
     "start-backend": "node src/AI_logic/AI_server.js",
     "start": "npm run start-backend",
-
     "preview-frontend": "vite preview",
     "lint": "eslint ."
   },
