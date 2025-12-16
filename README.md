@@ -19,7 +19,7 @@ A modern, responsive web application that uses advanced AI models to summarize t
 - **Input Validation**: Minimum 20-word requirement with special keyword recognition
 - **Special Queries**: Ask "whoami", "what's your name?", or similar questions to reveal the AI's identity
 - **Loading States**: Visual feedback during AI processing with animated spinner
-- **Social Authentication**: Google OAuth integration placeholder (ready for implementation)
+- **Social Authentication**: Full Google OAuth 2.0 integration with Passport.js
 
 ## 🛠️ Tech Stack
 
@@ -85,6 +85,10 @@ Before running this application, make sure you have the following installed:
    CO_API_KEY=your_cohere_api_key
    HF_TOKEN=your_huggingface_token
 
+   # Google OAuth (optional)
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+
    # Security
    BCRYPT_SALT_ROUNDS=12
    SESSION_SECRET=your_random_session_secret_string
@@ -94,12 +98,23 @@ Before running this application, make sure you have the following installed:
    Create a PostgreSQL database and run the following SQL to create the users table:
    ```sql
    CREATE TABLE credentials (
-       username VARCHAR(255) PRIMARY KEY,
+       id SERIAL PRIMARY KEY,
+       username VARCHAR(255) UNIQUE NOT NULL,
        f_letter VARCHAR(1) NOT NULL,
        email VARCHAR(255) UNIQUE NOT NULL,
-       hashpassword VARCHAR(255) NOT NULL
+       hashpassword VARCHAR(255) NULL
    );
    ```
+   Note: `hashpassword` is NULL for Google OAuth users.
+
+5. **Google OAuth Setup (Optional):**
+   To enable Google authentication:
+   - Go to the [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select an existing one
+   - Enable the Google+ API
+   - Create OAuth 2.0 credentials
+   - Add `http://localhost:3000/auth/google/callback` as an authorized redirect URI
+   - Add your Client ID and Client Secret to the `.env` file
 
 ## 🚀 Running the Application
 
@@ -136,7 +151,7 @@ Before running this application, make sure you have the following installed:
 ## 📖 Usage
 
 1. **Access the application** at `http://localhost:5173`
-2. **Sign up** for a new account or **login** with existing credentials
+2. **Sign up** for a new account, **login** with existing credentials, or use **Google authentication**
 3. **Enter text** to summarize (minimum 20 words required)
 4. **Click "Enter"** to generate an AI summary
 5. **Toggle theme** using the sun/moon icon in the header
@@ -165,8 +180,15 @@ src/
 
 ## 🔄 API Endpoints
 
-- `POST /login` - User authentication
+### Authentication
+- `GET /check-session` - Check if user session is active
+- `POST /login` - Traditional user authentication
 - `POST /signUp` - User registration
+- `GET /auth/google` - Initiate Google OAuth login
+- `GET /auth/google/callback` - Google OAuth callback handler
+- `GET /logout` - Logout and destroy session
+
+### AI Services
 - `POST /summarize` - Text summarization
 
 ## 🎨 Features in Detail
