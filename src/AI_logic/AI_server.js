@@ -58,7 +58,7 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 60, // 2 months
         httpOnly: true,
         secure: true,    // true in production
-        sameSite: 'lax'
+        sameSite: 'none'
       }
     })
 );
