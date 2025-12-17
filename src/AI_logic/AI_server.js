@@ -53,7 +53,7 @@ passport.use(new GoogleStrategy({
     callbackURL: "https://ai-server-hyua.onrender.com/auth/google/callback",
     passReqToCallback: true
 },
-async (request, accessToken, refreshToken, profile, done) => {
+async (profile, done) => {
     try {
         const email = profile.emails[0].value;
         const displayName = profile.displayName;
