@@ -56,7 +56,7 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
         isLoading(true) //Loading animation
 
         // Send POST request to backend summarization endpoint
-        const response = await fetch('http://localhost:3000/summarize', {
+        const response = await fetch('https://ai-text-summarizer-9lix.onrender.com/summarize', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -132,7 +132,7 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
                                     className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                     onClick={async () => {
                                         try {
-                                            await fetch('http://localhost:3000/logout', {
+                                            await fetch('hhttps://ai-text-summarizer-9lix.onrender.com/logout', {
                                                 method: 'GET',
                                                 credentials: 'include'
                                             });

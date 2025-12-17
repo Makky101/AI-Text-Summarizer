@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     const checkSession = async () => {
         try{
-            const response = await fetch('https://ai-text-summarizer-7hlq.onrender.com/check-session', {
+            const response = await fetch('https://ai-text-summarizer-9lix.onrender.com/check-session', {
                 credentials: 'include',
                 method: 'GET'
             });

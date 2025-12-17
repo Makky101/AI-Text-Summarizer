@@ -41,7 +41,7 @@ const pool = new Pool({
 
 // Initialize Express app
 const app = express();
-app.use(cors({ origin: true, credentials: true }));  // Enable CORS with credentials
+app.use(cors({ origin: 'https://clario-alpha.vercel.app', credentials: true }));  // Enable CORS with credentials
 app.use(express.json());  // Parse JSON request bodies
 app.use(
     session({
