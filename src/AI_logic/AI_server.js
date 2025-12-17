@@ -26,7 +26,7 @@ import { InferenceClient } from '@huggingface/inference';
 
 // Initialize Express app
 const app = express();
-app.use(cors({ origin: 'https://ai-text-summarizer-tawny.vercel.app', credentials: true }));  // Enable CORS with credentials
+app.use(cors({ origin: 'https://ai-platform-three-phi.vercel.app', credentials: true }));  // Enable CORS with credentials
 app.use(express.json());  // Parse JSON request bodies
 app.use(
     session({
@@ -37,23 +37,23 @@ app.use(
             maxAge: 1000 * 60 * 60 * 24 * 60,
             httpOnly: true,  // Security: prevent client-side access
             secure: true,    // Set to true in production with HTTPS
-            sameSite: 'none'
+            sameSite: 'lax'
         }
     })
 );
-/*
 app.use(passport.initialize())
 app.use(passport.session())
 
-// Google OAuth Strategy
+let Authorize = false
 
+// Google OAuth Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://ai-text-summarizer-7hlq.onrender.com/auth/google/callback",
+    callbackURL: "https://ai-server-hyua.onrender.com/auth/google/callback",
     passReqToCallback: true
 },
-async (profile, done) => {
+async (request, accessToken, refreshToken, profile, done) => {
     try {
         const email = profile.emails[0].value;
         const displayName = profile.displayName;
@@ -81,7 +81,7 @@ async (profile, done) => {
         return done(err, null);
     }
 }));
-*/
+
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
@@ -95,7 +95,6 @@ passport.deserializeUser(async (id, done) => {
         done(err, null);
     }
 });
-
 
 
 // PostgreSQL connection pool
@@ -144,11 +143,17 @@ const instruction = (text, main) => {
 // Middleware to check if user is authenticated via session
 // Redirects to login page if not authenticated
 function isAuthenticated(req, res, next){
-    if(req.session.user){
-        next(); //user is logged in
-    } else{
-        res.status(401).json({ loggedIn: false });
+    if(!Authorize){
+        if(req.session.user){
+            Authorize = true
+            next(); //user is logged in
+        } else{
+            res.status(401).json({ loggedIn: false });
+        }
+    }else{
+        next();
     }
+    
 }
 
 // Summarize text using Cohere AI
@@ -263,7 +268,6 @@ app.post('/signUp', async (req, res) => {
 });
 
 // Google auth routes
-/*
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -276,9 +280,8 @@ app.get('/auth/google/callback',
       email: req.user.email,
       fLetter: req.user.f_letter
     };
-    res.redirect('https://ai-text-summarizer-tawny.vercel.app/home')
+    res.redirect.save(() =>{('https://ai-platform-three-phi.vercel.app/home');})
   });
-*/
 
 // Logout endpoint
 app.get('/logout', (req, res) => {
