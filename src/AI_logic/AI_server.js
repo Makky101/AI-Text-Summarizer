@@ -48,6 +48,7 @@ app.use(
       store: new (pgSession(session))({
         pool: pool,
         tableName: 'user_session',
+        createTableIfMissing:true
       }),
       secret: process.env.SESSION_SECRET,
       resave: false,
@@ -59,7 +60,7 @@ app.use(
         sameSite: 'lax'
       }
     })
-  );
+);
   
 
 app.use(passport.initialize())
