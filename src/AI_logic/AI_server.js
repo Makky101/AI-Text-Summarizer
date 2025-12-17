@@ -211,11 +211,11 @@ app.post('/signUp', async (req, res) => {
             return res.status(404).json({ error: 'username already exists' });
         };
 
-        const newUser = {letter: result.rows[0].f_letter};
+        const newUser = {id: result.rows[0].id};
 
        req.login(newUser,(err)=>{
         console.log(err)
-        res.status(200).json({ message: 'User signed up successfully', letter: newUser.letter });
+        res.status(200).json({ message: 'User signed up successfully', letter: fLetter });
        })
     } catch (err) {
         console.error(err);
@@ -312,7 +312,6 @@ passport.use(new Strategy(async function verify(username,password,cb){
 
         const data = result.rows[0];
         const hash = data.hashpassword;
-        const fLetter = data.f_letter
 
         // Validate password and send the first letter of username
         const validate = bcrypt.compareSync(password, hash);
@@ -321,7 +320,7 @@ passport.use(new Strategy(async function verify(username,password,cb){
         }
 
         const user = {
-            letter: fLetter
+            id: data.id
         }
 
         return cb(null, user)
@@ -332,10 +331,23 @@ passport.use(new Strategy(async function verify(username,password,cb){
 }));
 
 passport.serializeUser((user, cb)=>{
-    cb(null,user)
+    cb(null,user.id)
 })
 
-passport.deserializeUser((user,cb)=>{
+passport.deserializeUser(async (id,cb)=>{
+    const cmd = 'SELECT sess FROM user_session WHERE id = $1';
+    const ID = [id-1];
+
+    // Query database for user
+    const result = await pool.query(cmd, ID);
+
+    // If user not found
+    if (result.rows.length === 0) {
+        return cb(null, false,{ error: 'username or password is incorrect' });
+    }
+
+    const data = JSON.parse(result.rows[0].sess);
+    let user = data.passport.user;
     cb(null,user)
 })
 
