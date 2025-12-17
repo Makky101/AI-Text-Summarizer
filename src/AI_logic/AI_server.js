@@ -148,7 +148,9 @@ async function summarizeUsingDistilbart(text) {
 
 // Endpoint to check if user session is active
 app.get('/check-session', (req, res) => {
-    console.log(req.session.passport.user)
+    console.log('Session ID:', req.sessionID);
+    console.log('Passport Session Data:', req.session.passport); // This should NOT be undefined after login
+    console.log('Req.user (undefined?):', req.user); // This is what we expect to be undefined
     if(req.isAuthenticated()){
         res.json({loggedIn: true, user: req.user})
     }else{
