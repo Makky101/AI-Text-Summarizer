@@ -37,14 +37,12 @@ app.use(
             maxAge: 1000 * 60 * 60 * 24 * 60,
             httpOnly: true,  // Security: prevent client-side access
             secure: true,    // Set to true in production with HTTPS
-            sameSite: 'lax'
+            sameSite: 'none'
         }
     })
 );
 app.use(passport.initialize())
 app.use(passport.session())
-
-let Authorize = false
 
 // Google OAuth Strategy
 passport.use(new GoogleStrategy({
@@ -143,15 +141,11 @@ const instruction = (text, main) => {
 // Middleware to check if user is authenticated via session
 // Redirects to login page if not authenticated
 function isAuthenticated(req, res, next){
-    if(!Authorize){
-        if(req.session.user){
-            Authorize = true
-            next(); //user is logged in
-        } else{
-            res.status(401).json({ loggedIn: false });
-        }
-    }else{
-        next();
+    if(req.session.user){
+        Authorize = true
+        next(); //user is logged in
+    } else{
+        res.status(401).json({ loggedIn: false });
     }
     
 }
@@ -280,7 +274,7 @@ app.get('/auth/google/callback',
       email: req.user.email,
       fLetter: req.user.f_letter
     };
-    res.redirect.save(() =>{('https://ai-platform-three-phi.vercel.app/home');})
+    res.redirect('https://ai-platform-three-phi.vercel.app/home')
   });
 
 // Logout endpoint
