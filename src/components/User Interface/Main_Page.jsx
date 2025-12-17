@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import './UI.css'
-import Heading from "./header";
+import User from './profile'
 import Input from "./input_box";
 import Output from "./output_box";
 // import "./resp.css";
@@ -56,19 +56,19 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
         isLoading(true) //Loading animation
 
         // Send POST request to backend summarization endpoint
-        const response = await fetch('https://ai-text-summarizer-7hlq.onrender.com/summarize', {
+        const response = await fetch('http://localhost:3000/summarize', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: text }),
         });
 
-        if (response.status === 401) {
+        const result = await response.json()
+
+        if (result.loggedIn === false) {
             // Redirect to login if session expired
             return navigate('/');
         }
-
-        const result = await response.json()
 
         isLoading(false) //Loading animation
 
@@ -113,7 +113,66 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
     }, [theme])
     return (
         <div className={`min-h-screen w-full transition-colors duration-300 overflow-x-hidden ${theme === 'dark' ? 'dark bg-black text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-            <Heading theme={theme} setTheme={setTheme} registered={registered} fLetter={fLetter}/>
+             {/* Fixed header with backdrop blur effect */}
+            <header className="w-full fixed top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-20 h-17">
+                <div className="max-w-5xl mx-auto flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
+                    {/* App branding and tagline */}
+                    <div className="flex items-center gap-3">
+                        <span className="text-xl font-bold tracking-tight">Summarizer</span>
+                        <span className="hidden sm:inline text-sm text-gray-500 dark:text-gray-400 font-medium">AI summaries, simplified</span>
+                    </div>
+
+                    {/* User controls: profile/login and theme toggle */}
+                    <div className="flex items-center gap-3">
+                        {/* Show user profile and logout if logged in, otherwise show login button */}
+                        {registered ? (
+                            <div className="flex items-center gap-2">
+                                <User letter={fLetter}/>
+                                <button
+                                    className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    onClick={async () => {
+                                        try {
+                                            await fetch('http://localhost:3000/logout', {
+                                                method: 'GET',
+                                                credentials: 'include'
+                                            });
+                                            navigate('/');
+                                            window.location.reload(); // To reset state
+                                        } catch (err) {
+                                            console.error('Logout failed:', err);
+                                        }
+                                    }}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white login-btn dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                onClick={() => navigate('/')}
+                            >
+                                Login
+                            </button>
+                        )}
+
+                        {/* Theme toggle button with moon/sun icon */}
+                        <button aria-label="Toggle theme" className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={() => {
+                            // Toggle between light and dark themes, persist to localStorage
+                            let color = theme === 'light' ? 'dark' : 'light'
+                            localStorage.setItem('color',color)
+                            setTheme(theme === 'light' ? 'dark' : 'light')
+                        }}>
+                            <i className={`fa-solid ${theme === 'light' ? 'fa-moon' : 'fa-sun'}`}></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            {/* Main page heading and subtitle */}
+            <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 mt-20">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-3">Analyze your text in real time</h2>
+                <h3 className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3">Turn research papers, textbooks, and documents into clear summaries instantly with AI-powered intelligence</h3>
+            </div>
             <div className="flex flex-col lg:flex-row justify-center gap-6 p-4 sm:p-6 min-h-[60vh] h-auto max-w-80xl mx-auto">
                <Input shift={shift} input={input} setInput={setInput}/>
                 <Output expanded={expanded} displayedSummary={displayedSummary} loading={loading}/>

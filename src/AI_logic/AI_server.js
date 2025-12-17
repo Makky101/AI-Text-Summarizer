@@ -2,7 +2,7 @@ import 'dotenv/config';// Load environment variables from .env
 
 
 // Express framework imports
-import express from 'express';
+import express, { request } from 'express';
 
 
 // PostgreSQL client
@@ -17,7 +17,11 @@ import cors from 'cors';
 import session from 'express-session';
 
 import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
+
+import { Strategy } from 'passport-local';
+
+import {Strategy as GoogleStrategy} from 'passport-google-oauth2'
+
 
 
 // AI clients
@@ -26,76 +30,24 @@ import { InferenceClient } from '@huggingface/inference';
 
 // Initialize Express app
 const app = express();
-app.use(cors({ origin: 'https://ai-platform-three-phi.vercel.app', credentials: true }));  // Enable CORS with credentials
+app.use(cors({ origin: true, credentials: true }));  // Enable CORS with credentials
 app.use(express.json());  // Parse JSON request bodies
 app.use(
     session({
-        secret: String(process.env.SESSION_SECRET),
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie:{
-            maxAge: 1000 * 60 * 60 * 24 * 60,
+            maxAge: 1000 * 60 * 60 * 24 * 60, //2months Active!!
             httpOnly: true,  // Security: prevent client-side access
-            secure: true,    // Set to true in production with HTTPS
+            secure: false,    // Set to true in production with HTTPS
             sameSite: 'lax'
         }
     })
 );
+
 app.use(passport.initialize())
 app.use(passport.session())
-
-let Authorize = false
-
-// Google OAuth Strategy
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://ai-server-hyua.onrender.com/auth/google/callback",
-    passReqToCallback: true
-},
-async (request, accessToken, refreshToken, profile, done) => {
-    try {
-        const email = profile.emails[0].value;
-        const displayName = profile.displayName;
-        const firstLetter = displayName ? displayName.charAt(0).toUpperCase() : 'U';
-
-        // Check if user exists
-        const cmd = 'SELECT * FROM credentials WHERE email = $1';
-        const result = await pool.query(cmd, [email]);
-
-        const baseUsername = 'N/A';
-        const uniqueSuffix = Date.now(); // or generate random string
-        const username = `${baseUsername}_${uniqueSuffix}`;
-        let user;
-        if (result.rows.length === 0) {
-            // Create new user
-            const insertCmd = 'INSERT INTO credentials (username, f_letter, email, hashpassword) VALUES ($1, $2, $3, $4) RETURNING *';
-            const insertResult = await pool.query(insertCmd, [username, firstLetter, email, baseUsername]);
-            user = insertResult.rows[0];
-        } else {
-            user = result.rows[0];
-        }
-
-        return done(null, user);
-    } catch (err) {
-        return done(err, null);
-    }
-}));
-
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-    try {
-        const cmd = 'SELECT * FROM credentials WHERE id = $1';
-        const result = await pool.query(cmd, [id]);
-        done(null, result.rows[0]);
-    } catch (err) {
-        done(err, null);
-    }
-});
-
 
 // PostgreSQL connection pool
 const pool = new Pool({
@@ -103,9 +55,9 @@ const pool = new Pool({
     host: process.env.HOST,
     database: process.env.DB,
     password: process.env.PASSWORD,
-    port: Number(process.env.PORT) || 5432,
-    ssl: { rejectUnauthorized: false }
+    port: Number(process.env.DB_PORT) || 5432,
 });
+
 
 // Port the server will listen on
 const port= process.env.PORT || 3000;
@@ -142,19 +94,28 @@ const instruction = (text, main) => {
 
 // Middleware to check if user is authenticated via session
 // Redirects to login page if not authenticated
-function isAuthenticated(req, res, next){
-    if(!Authorize){
-        if(req.session.user){
-            Authorize = true
-            next(); //user is logged in
-        } else{
-            res.status(401).json({ loggedIn: false });
-        }
-    }else{
-        next();
+function isAuthorized(req, res, next){
+    if(req.isAuthenticated()){
+        next(); //user is logged in
+    } else{
+        res.status(401).json({ loggedIn: false });
     }
     
 }
+
+/*
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email'],
+  }));
+  
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login', session: true }),
+    (req, res) => {
+        // Successful login → user is attached to session
+        res.redirect('/home'); // or send JSON if frontend-only
+    }
+);
+*/
 
 // Summarize text using Cohere AI
 async function summarizeUsingCohere(text) {
@@ -177,52 +138,39 @@ async function summarizeUsingDistilbart(text) {
 
 // Endpoint to check if user session is active
 app.get('/check-session', (req, res) => {
-    if(req.session.user) {
-        res.json({loggedIn: true, user: req.session.user})
+    console.log(req.user)
+    if(req.isAuthenticated()){
+        res.json({loggedIn: true, user: req.user})
     }else{
         res.json({loggedIn: false})
     }
 })
 
 // Login endpoint
-app.post('/login', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const cmd = 'SELECT * FROM credentials WHERE username = $1';
-        const values = [username];
+app.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
 
-        // Query database for user
-        const result = await pool.query(cmd, values);
-
-        // If user not found
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'username or password is incorrect' });
+        if (err) {
+            return res.status(500).json({ error: 'Server error' });
         }
 
-        const data = result.rows[0];
-        const hash = data.hashpassword;
-        const fLetter = data.f_letter
-
-        // Validate password and send the first letter of username
-        const validate = bcrypt.compareSync(password, hash);
-        if (!validate) {
-            return res.status(404).json({ error: 'username or password is incorrect' });
+        if (!user) {
+            return res.status(401).json(info);
         }
 
-        //store session for 2 months
-        req.session.user = {
-            username: data.username,
-            email: data.email,
-            fLetter: fLetter
-        }
+        // log user into the session
+        req.login(user, (err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Login failed' });
+            }
 
-        res.status(200).json({letter: fLetter, message: 'Login successful'})
+            return res.status(200).json({
+                message: 'Login successful',
+                letter: user.letter
+            });
+        });
 
-        // Could optionally return success message or token here
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'An issue occurred during login' });
-    }
+    })(req, res, next);
 });
 
 // Sign-up endpoint
@@ -231,6 +179,8 @@ app.post('/signUp', async (req, res) => {
         const { username, password, email } = req.body;
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS);
         const hash = bcrypt.hashSync(password, saltRounds);
+        
+
         // Extract first letter from username (must be alphabetic)
         let fLetter;
         const Alphabets = /[a-zA-Z]/
@@ -251,51 +201,28 @@ app.post('/signUp', async (req, res) => {
             return res.status(404).json({ error: 'username already exists' });
         };
 
-        const newUser = result.rows[0];
+        const newUser = {letter: result.rows[0].f_letter};
 
-        //Store session for 2 months as soon as user signs up
-        req.session.user = {
-            username: newUser.username,
-            email: newUser.email,
-            fLetter: newUser.f_letter
-        }
-
-        res.status(200).json({ message: 'User signed up successfully',letter: fLetter });
+       req.login(newUser,(err)=>{
+        console.log(err)
+        res.status(200).json({ message: 'User signed up successfully', letter: newUser.letter });
+       })
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An issue occurred during sign up' });
     }
 });
 
-// Google auth routes
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    // Successful authentication, set session
-    req.session.user = {
-      username: req.user.username,
-      email: req.user.email,
-      fLetter: req.user.f_letter
-    };
-    res.redirect.save(() =>{('https://ai-platform-three-phi.vercel.app/home');})
-  });
-
-// Logout endpoint
-app.get('/logout', (req, res) => {
-  req.logout((err) => {
-    if (err) return res.status(500).json({ error: 'Logout failed' });
-    req.session.destroy((err) => {
-      if (err) return res.status(500).json({ error: 'Session destroy failed' });
-      res.json({ loggedIn: false });
+app.get('/logout', (req, res, next) => {
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      res.json({ message: 'Logged out successfully' });
     });
-  });
 });
+  
 
 // Summarize endpoint
-app.post('/summarize',isAuthenticated, async (req, res) => {
+app.post('/summarize',isAuthorized, async (req, res) => {
     const text = req.body.text;
     // This is a joke!
     if (text === 'whoami') {
@@ -321,6 +248,86 @@ app.post('/summarize',isAuthenticated, async (req, res) => {
         }
     }
 });
+
+/*
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/callback",
+    passReqToCallback: true
+},
+async (profile, cb) => {
+    try {
+        const email = profile.emails[0].value;
+        const displayName = profile.displayName;
+        const firstLetter = displayName ? displayName.charAt(0).toUpperCase() : 'U';
+
+        // Check if user exists
+        const cmd = 'SELECT * FROM credentials WHERE email = $1';
+        const result = await pool.query(cmd, [email]);
+
+        const baseUsername = 'N/A';
+        const uniqueSuffix = Date.now(); // or generate random string
+        const username = `${baseUsername}_${uniqueSuffix}`;
+        let user;
+        if (result.rows.length === 0) {
+            // Create new user
+            const insertCmd = 'INSERT INTO credentials (username, f_letter, email, hashpassword) VALUES ($1, $2, $3, $4) RETURNING *';
+            const insertResult = await pool.query(insertCmd, [username, firstLetter, email, baseUsername]);
+            user = {letter: insertResult.rows[0].f_letter};
+        } else {
+            user = {letter: result.rows[0].fLetter};
+        }
+
+        return cb(null, user);
+    } catch (err) {
+        return cb(err, null);
+    }
+}));
+*/
+
+// Login  using passport
+passport.use(new Strategy(async function verify(username,password,cb){
+    try {
+        const cmd = 'SELECT * FROM credentials WHERE username = $1';
+        const values = [username];
+
+        // Query database for user
+        const result = await pool.query(cmd, values);
+
+        // If user not found
+        if (result.rows.length === 0) {
+            return cb(null, false,{ error: 'username or password is incorrect' });
+        }
+
+        const data = result.rows[0];
+        const hash = data.hashpassword;
+        const fLetter = data.f_letter
+
+        // Validate password and send the first letter of username
+        const validate = bcrypt.compareSync(password, hash);
+        if (!validate) {
+            return cb(null, false, { error: 'Username or password is incorrect' });
+        }
+
+        const user = {
+            letter: fLetter
+        }
+
+        return cb(null, user)
+
+    } catch (err) {
+        return cb(err)
+    }
+}));
+
+passport.serializeUser((user, cb)=>{
+    cb(null,user)
+})
+
+passport.deserializeUser((user,cb)=>{
+    cb(null,user)
+})
 
 // Start the server
 app.listen(port, () => {
