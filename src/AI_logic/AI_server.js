@@ -37,6 +37,7 @@ const pool = new Pool({
     database: process.env.DB,
     password: process.env.PASSWORD,
     port: Number(process.env.DB_PORT) || 5432,
+    ssl: { rejectUnauthorized: false }
 });
 
 // Initialize Express app
