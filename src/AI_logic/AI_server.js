@@ -40,7 +40,7 @@ app.use(
         cookie:{
             maxAge: 1000 * 60 * 60 * 24 * 60, //2months Active!!
             httpOnly: true,  // Security: prevent client-side access
-            secure: false,    // Set to true in production with HTTPS
+            secure: true,    // Set to true in production with HTTPS
             sameSite: 'lax'
         }
     })
