@@ -41,10 +41,12 @@ app.use(
         }
     })
 );
+/*
 app.use(passport.initialize())
 app.use(passport.session())
 
 // Google OAuth Strategy
+
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -79,7 +81,7 @@ async (profile, done) => {
         return done(err, null);
     }
 }));
-
+*/
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
@@ -93,6 +95,7 @@ passport.deserializeUser(async (id, done) => {
         done(err, null);
     }
 });
+
 
 
 // PostgreSQL connection pool
@@ -142,12 +145,10 @@ const instruction = (text, main) => {
 // Redirects to login page if not authenticated
 function isAuthenticated(req, res, next){
     if(req.session.user){
-        Authorize = true
         next(); //user is logged in
     } else{
         res.status(401).json({ loggedIn: false });
     }
-    
 }
 
 // Summarize text using Cohere AI
@@ -262,6 +263,7 @@ app.post('/signUp', async (req, res) => {
 });
 
 // Google auth routes
+/*
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -276,6 +278,7 @@ app.get('/auth/google/callback',
     };
     res.redirect('https://ai-text-summarizer-tawny.vercel.app/home')
   });
+*/
 
 // Logout endpoint
 app.get('/logout', (req, res) => {

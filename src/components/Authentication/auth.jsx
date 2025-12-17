@@ -93,9 +93,11 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
     }
 
     // Function for Google authentication
+    /*
     function handleGoogleAuth() {
         window.location.href = 'https://ai-text-summarizer-7hlq.onrender.com/auth/google';
     }
+    */
 
     // Toggle dark/light mode by modifying body for the authentication side
     useEffect(() => {
@@ -176,7 +178,7 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
                 <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
             </div>
 
-            {/* Google Authentication button */}
+            {/*
             <div className="mt-4 flex items-center justify-center">
                 <button 
                     className="px-4 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 shadow-sm"
@@ -185,7 +187,8 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
                     <i className="fa-brands fa-google text-red-500"></i>
                     Continue with Google
                 </button>
-            </div>
+                /* Google Authentication button 
+            </div>*/}
 
             {/* Toggle between Login and Sign Up */}
             <p className="mt-4 text-sm text-gray-600">
