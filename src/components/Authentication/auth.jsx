@@ -23,7 +23,7 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
         if (newUser) {
             // Sign Up flow
             try {
-                const response = await fetch('https://ai-server-hyua.onrender.com/signUp', {
+                const response = await fetch('https://ai-text-summarizer-7hlq.onrender.com/signUp', {
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
@@ -48,7 +48,7 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
         } else {
             // Login flow
             try {
-                const response = await fetch('https://ai-server-hyua.onrender.com/login', {
+                const response = await fetch('https://ai-text-summarizer-7hlq.onrender.com/login', {
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
@@ -94,7 +94,7 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
 
     // Function for Google authentication
     function handleGoogleAuth() {
-        window.location.href = 'https://ai-server-hyua.onrender.com/auth/google';
+        window.location.href = 'https://ai-text-summarizer-7hlq.onrender.com/auth/google';
     }
 
     // Toggle dark/light mode by modifying body for the authentication side

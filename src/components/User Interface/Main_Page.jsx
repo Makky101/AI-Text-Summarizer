@@ -56,7 +56,7 @@ const Main_Page = ({theme, setTheme, registered, fLetter}) => {
         isLoading(true) //Loading animation
 
         // Send POST request to backend summarization endpoint
-        const response = await fetch('https://ai-server-hyua.onrender.com/summarize', {
+        const response = await fetch('https://ai-text-summarizer-7hlq.onrender.com/summarize', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },

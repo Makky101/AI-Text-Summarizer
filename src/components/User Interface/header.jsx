@@ -32,7 +32,7 @@ function Heading({fLetter, setTheme, theme, registered}){
                                     className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                     onClick={async () => {
                                         try {
-                                            await fetch('http://localhost:3000/logout', {
+                                            await fetch('https://ai-text-summarizer-7hlq.onrender.com/logout', {
                                                 method: 'GET',
                                                 credentials: 'include'
                                             });

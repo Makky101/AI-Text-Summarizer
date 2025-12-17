@@ -26,7 +26,7 @@ import { InferenceClient } from '@huggingface/inference';
 
 // Initialize Express app
 const app = express();
-app.use(cors({ origin: 'https://ai-platform-three-phi.vercel.app', credentials: true }));  // Enable CORS with credentials
+app.use(cors({ origin: 'https://ai-text-summarizer-tawny.vercel.app', credentials: true }));  // Enable CORS with credentials
 app.use(express.json());  // Parse JSON request bodies
 app.use(
     session({
@@ -48,7 +48,7 @@ app.use(passport.session())
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://ai-server-hyua.onrender.com/auth/google/callback",
+    callbackURL: "https://ai-text-summarizer-7hlq.onrender.com/auth/google/callback",
     passReqToCallback: true
 },
 async (profile, done) => {
@@ -274,7 +274,7 @@ app.get('/auth/google/callback',
       email: req.user.email,
       fLetter: req.user.f_letter
     };
-    res.redirect('https://ai-platform-three-phi.vercel.app/home')
+    res.redirect('https://ai-text-summarizer-tawny.vercel.app/home')
   });
 
 // Logout endpoint
