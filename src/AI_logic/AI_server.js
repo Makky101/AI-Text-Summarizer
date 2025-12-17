@@ -22,32 +22,13 @@ import { Strategy } from 'passport-local';
 
 import {Strategy as GoogleStrategy} from 'passport-google-oauth2'
 
+import pgSession from 'connect-pg-simple';
+
 
 
 // AI clients
 import { CohereClientV2 } from 'cohere-ai';
 import { InferenceClient } from '@huggingface/inference';
-
-// Initialize Express app
-const app = express();
-app.use(cors({ origin: true, credentials: true }));  // Enable CORS with credentials
-app.use(express.json());  // Parse JSON request bodies
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie:{
-            maxAge: 1000 * 60 * 60 * 24 * 60, //2months Active!!
-            httpOnly: true,  // Security: prevent client-side access
-            secure: true,    // Set to true in production with HTTPS
-            sameSite: 'lax'
-        }
-    })
-);
-
-app.use(passport.initialize())
-app.use(passport.session())
 
 // PostgreSQL connection pool
 const pool = new Pool({
@@ -57,6 +38,33 @@ const pool = new Pool({
     password: process.env.PASSWORD,
     port: Number(process.env.DB_PORT) || 5432,
 });
+
+// Initialize Express app
+const app = express();
+app.use(cors({ origin: true, credentials: true }));  // Enable CORS with credentials
+app.use(express.json());  // Parse JSON request bodies
+app.use(
+    session({
+      store: new (pgSession(session))({
+        pool: pool,
+        tableName: 'user_session',
+      }),
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 60, // 2 months
+        httpOnly: true,
+        secure: true,    // true in production
+        sameSite: 'lax'
+      }
+    })
+  );
+  
+
+app.use(passport.initialize())
+app.use(passport.session())
+
 
 
 // Port the server will listen on
