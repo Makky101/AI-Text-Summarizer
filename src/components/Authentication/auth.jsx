@@ -15,9 +15,7 @@ const Auth = ({authTheme, setRegistered, registered, setFLetter}) => {
     const [email, setEmail] = useState('')
     let navigate = useNavigate()                    // React Router navigation hook
 
-    if(registered){
-        navigate('/home')
-    }
+    if(registered) return navigate('/home');
     // Function to handle Login or Sign Up requests
     async function handleAuth() {
         if (newUser) {
