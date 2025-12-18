@@ -334,22 +334,28 @@ passport.serializeUser((user, cb)=>{
     cb(null,user.id)
 })
 
-passport.deserializeUser(async (id,cb)=>{
-    const cmd = 'SELECT sess FROM user_session WHERE id = $1';
-    const ID = [id-1];
+passport.deserializeUser(async (id, cb) => {
+    try {
+        const result = await pool.query(
+            'SELECT f_letter FROM credentials WHERE id = $1', 
+            [id]
+        );
 
-    // Query database for user
-    const result = await pool.query(cmd, ID);
+        if (result.rows.length === 0) {
+            return cb(null, false);
+        }
 
-    // If user not found
-    if (result.rows.length === 0) {
-        return cb(null, false,{ error: 'username or password is incorrect' });
+        let data = result.rows[0];
+        const user = {
+            id: id,
+            letter: data.f_letter
+        };
+
+        cb(null, user);
+    } catch (err) {
+        cb(err);
     }
-
-    const data = JSON.parse(result.rows[0].sess);
-    let user = data.passport.user;
-    cb(null,user)
-})
+});
 
 // Start the server
 app.listen(port, () => {
