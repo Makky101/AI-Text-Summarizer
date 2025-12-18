@@ -9,7 +9,7 @@ A modern, responsive web application that uses advanced AI models to summarize t
 
 ## 🌐 Live Deployment
 
-- **Frontend**: https://ai-platform-three-phi.vercel.app/
+- **Frontend**: https://clario-alpha.vercel.app/
 - **Backend**: https://ai-text-summarizer-9lix.onrender.com/
 
 ## 🚀 Features
