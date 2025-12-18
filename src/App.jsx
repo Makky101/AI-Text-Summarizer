@@ -25,7 +25,7 @@ function App() {
 
             const result = await response.json();
             if (result.loggedIn) {
-              setFLetter(result.user.fLetter);
+              setFLetter(result.user.letter);
               setRegistered(true);
             }
         }catch(err){
