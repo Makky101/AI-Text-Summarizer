@@ -1,3 +1,4 @@
+/* Authentication page layout */
 .auth-container {
     display: flex;
     justify-content: center;
@@ -6,6 +7,7 @@
     padding: 20px;
 }
 
+/* Main authentication form container */
 .auth-box {
     width: 100%;
     max-width: 400px;
@@ -16,17 +18,20 @@
     text-align: center;
 }
 
+/* Form title styling */
 .auth-box h2 {
     margin-bottom: 20px;
     color: black
 }
 
+/* Form layout */
 .auth-box form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
+/* Input field styling */
 .auth-box input {
     padding: 10px 12px;
     font-size: 16px;
@@ -35,11 +40,13 @@
     outline: none;
 }
 
+/* Input focus state */
 .auth-box input:focus {
     border-color: dodgerblue;
     box-shadow: 0 0 0 3px rgba(0, 120, 255, 0.2);
 }
 
+/* Submit button styling */
 .auth-box button {
     padding: 10px 15px;
     font-size: 16px;
@@ -51,14 +58,17 @@
     transition: transform 0.2s ease;
 }
 
+/* Button hover effect */
 .auth-box button:hover {
     transform: scale(1.05);
 }
 
+/* Warning text color */
 .warning{
     color: red;
 }
 
+/* Google sign-in button styling */
 .google-btn {
     margin-top: 6px;
     display: flex;
@@ -72,23 +82,26 @@
     font-weight: 500;
 }
 
+/* Google button hover effect */
 .google-btn:hover {
     opacity: 0.9;
 }
 
+/* Toggle between login/signup text */
 .toggle-text {
     margin-top: 15px;
     font-size: 14px;
     color: #555;
 }
 
+/* Clickable toggle link */
 .toggle-text span {
     color: dodgerblue;
     cursor: pointer;
     font-weight: 500;
 }
 
-/* Responsive for small devices */
+/* Responsive styling for small devices */
 @media (max-width: 480px) {
     .auth-box {
         padding: 25px 20px;

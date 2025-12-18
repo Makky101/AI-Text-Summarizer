@@ -4,13 +4,13 @@ A modern, responsive web application that uses advanced AI models to summarize t
 
 ![React](https://img.shields.io/badge/React-19.1.1-blue?logo=react)
 ![Express](https://img.shields.io/badge/Express-5.1.0-black?logo=express)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue?logo=typescript)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?logo=javascript)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-8.16.3-blue?logo=postgresql)
 
 ## 🌐 Live Deployment
 
 - **Frontend**: https://ai-platform-three-phi.vercel.app/
-- **Backend**: https://ai-server-hyua.onrender.com/
+- **Backend**: https://ai-text-summarizer-9lix.onrender.com/
 
 ## 🚀 Features
 
@@ -39,7 +39,7 @@ A modern, responsive web application that uses advanced AI models to summarize t
 ### Backend
 
 - **Express.js** - Web application framework for Node.js
-- **TypeScript** - Typed superset of JavaScript
+- **JavaScript (ES6+)** - Server-side scripting language
 - **PostgreSQL** - Advanced open-source relational database
 - **bcrypt** - Password hashing library
 - **CORS** - Cross-Origin Resource Sharing support
@@ -166,8 +166,7 @@ Before running this application, make sure you have the following installed:
 ```
 src/
 ├── AI_logic/
-│   ├── AI_server.ts          # Express server with AI integration
-│   └── tsconfig.json          # TypeScript configuration
+│   └── AI_server.js          # Express server with AI integration
 ├── components/
 │   ├── Authentication/
 │   │   ├── auth.jsx           # Login/Signup component
