@@ -376,7 +376,8 @@ passport.use(new Strategy(async function verify(username, password, cb) {
 
         // Return user object with ID for session storage
         const user = {
-            id: data.id
+            id: data.id,
+            letter: data.f_letter
         };
 
         return cb(null, user);
