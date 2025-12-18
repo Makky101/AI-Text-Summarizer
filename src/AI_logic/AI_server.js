@@ -148,7 +148,7 @@ async function summarizeUsingDistilbart(text) {
 
 // Endpoint to check if user session is active
 app.get('/check-session', (req, res) => {
-    console.log(req.user); // This is what we expect to be undefined
+    console.log(req.session); // This is what we expect to be undefined
     if(req.isAuthenticated()){
         res.json({loggedIn: true, user: req.user})
     }else{
