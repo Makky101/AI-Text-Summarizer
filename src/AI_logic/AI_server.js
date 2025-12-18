@@ -40,13 +40,16 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
+const PostgreSqlStore = pgSession(session);
+
 // Initialize Express app
 const app = express();
+app.set('trust proxy', 1);
 app.use(cors({ origin: 'https://clario-alpha.vercel.app', credentials: true }));  // Enable CORS with credentials
 app.use(express.json());  // Parse JSON request bodies
 app.use(
     session({
-      store: new (pgSession(session))({
+      store: new PostgreSqlStore({
         pool: pool,
         tableName: 'user_session',
         createTableIfMissing:true
@@ -148,7 +151,8 @@ async function summarizeUsingDistilbart(text) {
 
 // Endpoint to check if user session is active
 app.get('/check-session', (req, res) => {
-    console.log(req.passport); // This is what we expect to be undefined
+    console.log('Is Authenticated:', req.isAuthenticated());
+    console.log('User:', req.user); // This is what we expect to be undefined
     if(req.isAuthenticated()){
         res.json({loggedIn: true, user: req.user})
     }else{
