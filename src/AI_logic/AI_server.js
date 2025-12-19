@@ -296,7 +296,6 @@ app.post('/summarize', isAuthorized, async (req, res) => {
 
         // Fallback to DistilBART for errors like 404, 429, 500
         if ([404, 429, 500].includes(err.statusCode)) {
-            console.log('Switching to Distilbart');
             try {
                 const feedBack = await summarizeUsingDistilbart(text);
                 return res.json({ summary: feedBack });
